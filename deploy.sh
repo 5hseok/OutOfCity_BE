@@ -2,7 +2,7 @@
 cd /home/ubuntu
 
 # Docker 이미지 pull 및 컨테이너 재실행
-sudo docker pull 5hseok/OutOfCity-server:0.0.1
+sudo docker pull 5hseok/outofcity-server:0.0.1
 
 # 기존 컨테이너 종료 및 제거 (블루-그린 배포 준비)
 if [ "$(sudo docker ps -q -f name=spring_app_blue)" ]; then
@@ -16,10 +16,10 @@ fi
 # 새로운 Docker 컨테이너 실행 (블루-그린 배포 방식)
 if [ "$CURRENT_ENV" == "blue" ]; then
   NEW_ENV="green"
-  sudo docker run -d --name spring_app_green -p 8081:8080 5hseok/OutOfCity-server:0.0.1
+  sudo docker run -d --name spring_app_green -p 8081:8080 5hseok/outofcity-server:0.0.1
 else
   NEW_ENV="blue"
-  sudo docker run -d --name spring_app_blue -p 8082:8080 5hseok/OutOfCity-server:0.0.1
+  sudo docker run -d --name spring_app_blue -p 8082:8080 5hseok/outofcity-server:0.0.1
 fi
 
 # 현재 배포된 버전을 확인하여 다음 배포할 환경을 준비
