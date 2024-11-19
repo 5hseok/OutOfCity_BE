@@ -1,6 +1,6 @@
 name: Deploy Prochord
 on:
-  merge_group:
+  push:
     branches:
       - main
 
