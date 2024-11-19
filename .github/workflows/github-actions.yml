@@ -41,5 +41,4 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
           script: |
-           
             bash /home/ubuntu/deploy.sh
