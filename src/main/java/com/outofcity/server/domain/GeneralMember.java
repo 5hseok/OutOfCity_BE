@@ -23,7 +23,7 @@ public class GeneralMember {
     @Column(nullable = false)
     private String name;
 
-    @Column(columnDefinition = "varchar(20) default '씨앗'")
+    @Column(name = "`rank`", columnDefinition = "varchar(20) default '씨앗'")
     private String rank;
 
     @Column
