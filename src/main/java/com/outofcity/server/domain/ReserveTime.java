@@ -24,24 +24,19 @@ public class ReserveTime {
     @JoinColumn(name = "reserve_date_id", nullable = false)
     private ReserveDate reserveDate;
 
-    @OneToOne(mappedBy = "reserveTime", cascade = CascadeType.ALL, orphanRemoval = true)
-    private ReserveParticipants reserveParticipants;
-
     @Column(nullable = false)
     private LocalDateTime reserveTime;
 
     @Builder
-    public ReserveTime(ReserveDate reserveDate, LocalDateTime reserveTime, ReserveParticipants reserveParticipants) {
+    public ReserveTime(ReserveDate reserveDate, LocalDateTime reserveTime) {
         this.reserveDate = reserveDate;
         this.reserveTime = reserveTime;
-        this.reserveParticipants = reserveParticipants;
     }
 
-    public static ReserveTime of(ReserveDate reserveDate, LocalDateTime reserveTime, ReserveParticipants reserveParticipants) {
+    public static ReserveTime of(ReserveDate reserveDate, LocalDateTime reserveTime) {
         return ReserveTime.builder()
                 .reserveDate(reserveDate)
                 .reserveTime(reserveTime)
-                .reserveParticipants(reserveParticipants)
                 .build();
     }
 }

@@ -57,27 +57,8 @@ public class Activity {
     @Column(precision = 9, scale = 6)
     private Double longitude;
 
-    @ManyToMany
-    @JoinTable(
-            name = "activity_sub_category",
-            joinColumns = @JoinColumn(name = "activity_id"),
-            inverseJoinColumns = @JoinColumn(name = "sub_category_id")
-    )
-    private List<SubCategory> subCategories;
-
-    @ManyToMany
-    @JoinTable(
-            name = "activity_type",
-            joinColumns = @JoinColumn(name = "activity_id"),
-            inverseJoinColumns = @JoinColumn(name = "type_id")
-    )
-    private List<Type> types;
-
-    @OneToMany(mappedBy = "activity", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ReserveDate> reserveDates;
-
     @Builder
-    public Activity(BusinessMember businessMember, String name, String activityPhoto, String description, String state, Integer price, String mainCategory, LocalDateTime createdAt, LocalDateTime updatedAt, String address, Double latitude, Double longitude, List<SubCategory> subCategories, List<Type> types, List<ReserveDate> reserveDates) {
+    public Activity(BusinessMember businessMember, String name, String activityPhoto, String description, String state, Integer price, String mainCategory, LocalDateTime createdAt, LocalDateTime updatedAt, String address, Double latitude, Double longitude) {
         this.businessMember = businessMember;
         this.name = name;
         this.activityPhoto = activityPhoto;
@@ -90,12 +71,9 @@ public class Activity {
         this.address = address;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.subCategories = subCategories;
-        this.types = types;
-        this.reserveDates = reserveDates;
     }
 
-    public static Activity of(BusinessMember businessMember, String name, String activityPhoto, String description, String state, Integer price, String mainCategory, LocalDateTime createdAt, LocalDateTime updatedAt, String address, Double latitude, Double longitude, List<SubCategory> subCategories, List<Type> types, List<ReserveDate> reserveDates) {
+    public static Activity of(BusinessMember businessMember, String name, String activityPhoto, String description, String state, Integer price, String mainCategory, LocalDateTime createdAt, LocalDateTime updatedAt, String address, Double latitude, Double longitude) {
         return Activity.builder()
                 .businessMember(businessMember)
                 .name(name)
@@ -109,13 +87,10 @@ public class Activity {
                 .address(address)
                 .latitude(latitude)
                 .longitude(longitude)
-                .subCategories(subCategories)
-                .types(types)
-                .reserveDates(reserveDates)
                 .build();
     }
 
-    public void AdminUpdateActivity(String name, String activityPhoto, String description, String state, Integer price, String mainCategory, String address, Double latitude, Double longitude, List<SubCategory> subCategories, List<Type> types, List<ReserveDate> reserveDates) {
+    public void AdminUpdateActivity(String name, String activityPhoto, String description, String state, Integer price, String mainCategory, String address, Double latitude, Double longitude) {
         this.name = name;
         this.activityPhoto = activityPhoto;
         this.description = description;
@@ -125,8 +100,5 @@ public class Activity {
         this.address = address;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.subCategories = subCategories;
-        this.types = types;
-        this.reserveDates = reserveDates;
     }
 }

@@ -24,23 +24,18 @@ public class ReserveDate {
     @JoinColumn(name = "activity_id", nullable = false)
     private Activity activity;
 
-    @OneToMany(mappedBy = "reserveDate", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ReserveTime> reserveTimes;
-
     @Column(nullable = false)
     private LocalDateTime reserveDate;
 
     @Builder
-    public ReserveDate(Activity activity, LocalDateTime reserveDate, List<ReserveTime> reserveTimes) {
+    public ReserveDate(Activity activity, LocalDateTime reserveDate) {
         this.activity = activity;
         this.reserveDate = reserveDate;
-        this.reserveTimes = reserveTimes;
     }
-    public static ReserveDate of(Activity activity, LocalDateTime reserveDate, List<ReserveTime> reserveTimes) {
+    public static ReserveDate of(Activity activity, LocalDateTime reserveDate) {
         return ReserveDate.builder()
                 .activity(activity)
                 .reserveDate(reserveDate)
-                .reserveTimes(reserveTimes)
                 .build();
     }
 }
