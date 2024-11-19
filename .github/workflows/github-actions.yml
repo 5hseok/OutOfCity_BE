@@ -1,6 +1,6 @@
 name: Deploy Prochord
 on:
-  push:
+  merge_group:
     branches:
       - main
 
@@ -41,20 +41,5 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
           script: |
-            # Docker Compose 파일이 있는 디렉토리로 이동
-            cd /home/ubuntu
-
-            # Docker 이미지 pull 및 컨테이너 재실행
-            sudo docker pull 5hseok/OutOfCity-server:0.0.1
-
-            # 기존 컨테이너 종료 및 제거
-            if [ "$(sudo docker ps -q -f name=spring_app)" ]; then
-              sudo docker stop spring_app && sudo docker rm spring_app
-            fi
-
-            # Docker Compose를 사용하여 컨테이너 실행
-            sudo docker-compose down
-            sudo docker-compose up --build -d
-
-            # spring_app 컨테이너의 로그 출력
-            sudo docker logs spring_app
+           
+            bash /home/ubuntu/deploy.sh
