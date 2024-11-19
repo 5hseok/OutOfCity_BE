@@ -21,6 +21,4 @@ RUN ./gradlew clean build -x test
 FROM openjdk:21-jdk-slim
 COPY --from=builder /app/build/libs/*.jar /app/app.jar
 
-COPY /src/main/resources/application.yml /app/application.yml
-
-ENTRYPOINT ["java", "-Dspring.profiles.active=docker", "-jar", "/app/app.jar"]
+ENTRYPOINT ["java", "-Dspring.config.location=/app/application.yml", "-Dspring.profiles.active=docker", "-jar", "/app/app.jar"]
