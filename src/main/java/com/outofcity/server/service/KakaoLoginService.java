@@ -4,9 +4,12 @@ import com.outofcity.server.domain.GeneralMember;
 import com.outofcity.server.dto.member.kakaologin.response.SuccessLoginResponseDto;
 import com.outofcity.server.global.exception.dto.oauth.KakaoTokenResponseDto;
 import com.outofcity.server.global.exception.dto.oauth.KakaoUserInfoResponseDto;
+import com.outofcity.server.global.jwt.JwtTokenProvider;
+import com.outofcity.server.global.jwt.UserAuthentication;
 import com.outofcity.server.repository.GeneralMemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 
@@ -32,6 +35,7 @@ public class KakaoLoginService {
     private static final String KAUTH_TOKEN_URL = "https://kauth.kakao.com/oauth/token";
     private static final String KAPI_USER_URL = "https://kapi.kakao.com/v2/user/me";
     private final GeneralMemberRepository generalMemberRepository;
+    private final JwtTokenProvider jwtTokenProvider;
 
     // 1. Access Token 받기
     public String getAccessTokenFromKakao(String code){
@@ -39,7 +43,6 @@ public class KakaoLoginService {
                 .uri(uriBuilder -> uriBuilder
                         .queryParam("grant_type", "authorization_code")
                         .queryParam("client_id", clientId)
-                        .queryParam("redirect_uri", redirectUri)
                         .queryParam("code", code)
                         .build())
                 .header(HttpHeaders.CONTENT_TYPE, "application/x-www-form-urlencoded")
@@ -54,7 +57,7 @@ public class KakaoLoginService {
     public KakaoUserInfoResponseDto getUserInfo(String accessToken) {
         KakaoUserInfoResponseDto userInfo = WebClient.create(KAPI_USER_URL)
                 .get()
-                .header(HttpHeaders.AUTHORIZATION, accessToken)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
                 .retrieve()
                 .bodyToMono(KakaoUserInfoResponseDto.class)
                 .block();
@@ -62,7 +65,7 @@ public class KakaoLoginService {
         return userInfo;
     }
 
-    public SuccessLoginResponseDto findUser(KakaoUserInfoResponseDto userInfo) {
+    public SuccessLoginResponseDto findUser(KakaoUserInfoResponseDto userInfo, String token) {
 
         GeneralMember generalMember = generalMemberRepository.findById(userInfo.getId())
                 .orElseGet(() -> {
@@ -75,12 +78,18 @@ public class KakaoLoginService {
                     return generalMemberRepository.save(newGeneralMember);
                 });
 
+        // JWT 토큰 발급
+        String jwtToken = jwtTokenProvider.issueAccessToken(
+                UserAuthentication.createUserAuthentication(generalMember.getGeneralMemberId())
+        );
+
         return SuccessLoginResponseDto.builder()
                 .id(generalMember.getGeneralMemberId())
                 .name(generalMember.getName())
                 .rank(generalMember.getRank())
                 .profileImageUrl(generalMember.getProfileImageUrl())
                 .email(generalMember.getEmail())
+                .jwtToken(jwtToken)
                 .build();
     }
 }
