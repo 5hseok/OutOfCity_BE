@@ -3,6 +3,7 @@ package com.outofcity.server.service;
 import com.outofcity.server.domain.GeneralMember;
 import com.outofcity.server.dto.member.kakaologin.response.SuccessLoginResponseDto;
 import com.outofcity.server.global.exception.dto.oauth.KakaoTokenResponseDto;
+import com.outofcity.server.global.exception.dto.oauth.KakaoUserInfoRequestDto;
 import com.outofcity.server.global.exception.dto.oauth.KakaoUserInfoResponseDto;
 import com.outofcity.server.global.jwt.JwtTokenProvider;
 import com.outofcity.server.global.jwt.UserAuthentication;
@@ -60,7 +61,7 @@ public class KakaoLoginService {
         return userInfo;
     }
 
-    public SuccessLoginResponseDto findUser(KakaoUserInfoResponseDto userInfo, String token) {
+    public SuccessLoginResponseDto findUser(KakaoUserInfoResponseDto userInfo) {
 
         GeneralMember generalMember = generalMemberRepository.findById(userInfo.getId())
                 .orElseGet(() -> {
@@ -88,4 +89,35 @@ public class KakaoLoginService {
                 .jwtToken(jwtToken)
                 .build();
     }
+
+
+    public SuccessLoginResponseDto findUserWithReact(KakaoUserInfoRequestDto userInfo) {
+
+        GeneralMember generalMember = generalMemberRepository.findById(userInfo.id())
+                .orElseGet(() -> {
+                    GeneralMember newGeneralMember = GeneralMember.builder()
+                            .id(userInfo.id())
+                            .name(userInfo.name())
+                            .email(userInfo.email())
+                            .rank("여행 씨앗")
+                            .profileImageUrl(userInfo.profileImageUrl())
+                            .build();
+                    return generalMemberRepository.save(newGeneralMember);
+                });
+
+        // JWT 토큰 발급
+        String jwtToken = jwtTokenProvider.issueAccessToken(
+                UserAuthentication.createUserAuthentication(generalMember.getGeneralMemberId())
+        );
+
+        return SuccessLoginResponseDto.builder()
+                .id(generalMember.getGeneralMemberId())
+                .name(generalMember.getName())
+                .rank(generalMember.getRank())
+                .profileImageUrl(generalMember.getProfileImageUrl())
+                .email(generalMember.getEmail())
+                .jwtToken(jwtToken)
+                .build();
+    }
+
 }
