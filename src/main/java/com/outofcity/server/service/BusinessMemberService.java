@@ -5,7 +5,6 @@ import com.outofcity.server.dto.member.business.request.BusinessMemberRequestDto
 import com.outofcity.server.dto.member.business.response.BusinessMemberResponseDto;
 import com.outofcity.server.global.exception.BusinessException;
 import com.outofcity.server.global.exception.message.ErrorMessage;
-import com.outofcity.server.global.exception.message.SuccessMessage;
 import com.outofcity.server.repository.BusinessMemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

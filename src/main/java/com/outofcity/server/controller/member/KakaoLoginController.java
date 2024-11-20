@@ -1,17 +1,18 @@
 package com.outofcity.server.controller.member;
 
-import com.outofcity.server.domain.GeneralMember;
 import com.outofcity.server.dto.member.kakaologin.response.SuccessLoginResponseDto;
 import com.outofcity.server.global.exception.dto.SuccessStatusResponse;
 import com.outofcity.server.global.exception.dto.oauth.KakaoUserInfoResponseDto;
 import com.outofcity.server.global.exception.message.SuccessMessage;
 import com.outofcity.server.service.KakaoLoginService;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController

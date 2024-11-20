@@ -1,13 +1,12 @@
 package com.outofcity.server.domain;
 
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import jakarta.persistence.*;
-import java.time.LocalDate;
+
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Getter
