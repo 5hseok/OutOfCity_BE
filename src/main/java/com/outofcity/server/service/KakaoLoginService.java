@@ -9,17 +9,12 @@ import com.outofcity.server.global.jwt.UserAuthentication;
 import com.outofcity.server.repository.GeneralMemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.io.IOException;
-import java.net.http.HttpClient;
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -37,7 +32,7 @@ public class KakaoLoginService {
     private final GeneralMemberRepository generalMemberRepository;
     private final JwtTokenProvider jwtTokenProvider;
 
-    // 1. Access Token 받기
+    // Kakao Access Token 받기
     public String getAccessTokenFromKakao(String code){
         KakaoTokenResponseDto kakaoTokenResponseDto = WebClient.create(KAUTH_TOKEN_URL).post()
                 .uri(uriBuilder -> uriBuilder
@@ -53,7 +48,7 @@ public class KakaoLoginService {
         return kakaoTokenResponseDto.getAccessToken();
     }
 
-    // 2. 사용자 정보 가져오기
+    //  사용자 정보 가져오기 - 이메일, 닉네임, 프로필 사진
     public KakaoUserInfoResponseDto getUserInfo(String accessToken) {
         KakaoUserInfoResponseDto userInfo = WebClient.create(KAPI_USER_URL)
                 .get()
@@ -72,6 +67,7 @@ public class KakaoLoginService {
                     GeneralMember newGeneralMember = GeneralMember.builder()
                             .id(userInfo.getId())
                             .name(userInfo.getProperties().getNickname())
+                            .email(userInfo.getKakaoAccount().getEmail())
                             .rank("여행 씨앗")
                             .profileImageUrl(userInfo.getKakaoAccount().getProfile().getProfileImageUrl())
                             .build();

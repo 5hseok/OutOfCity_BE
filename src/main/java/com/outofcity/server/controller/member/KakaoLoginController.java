@@ -2,11 +2,14 @@ package com.outofcity.server.controller.member;
 
 import com.outofcity.server.domain.GeneralMember;
 import com.outofcity.server.dto.member.kakaologin.response.SuccessLoginResponseDto;
+import com.outofcity.server.global.exception.dto.SuccessStatusResponse;
 import com.outofcity.server.global.exception.dto.oauth.KakaoUserInfoResponseDto;
+import com.outofcity.server.global.exception.message.SuccessMessage;
 import com.outofcity.server.service.KakaoLoginService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +22,7 @@ public class KakaoLoginController {
     private final KakaoLoginService kakaoLoginService;
 
     @GetMapping("/callback")
-    public ResponseEntity<?> callback(@RequestParam("code") String code) {
+    public ResponseEntity<SuccessStatusResponse<SuccessLoginResponseDto>> callback(@RequestParam("code") String code) {
         // 1. 코드로 Access Token 발급
         String accessToken = kakaoLoginService.getAccessTokenFromKakao(code);
         log.info("accessToken: {}", accessToken);
@@ -30,6 +33,10 @@ public class KakaoLoginController {
         SuccessLoginResponseDto successLoginResponseDto = kakaoLoginService.findUser(userInfo, accessToken);
 
         // 5. 메인 페이지로 리다이렉트
-        return ResponseEntity.ok(successLoginResponseDto);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                SuccessStatusResponse.of(
+                        SuccessMessage.SIGNIN_SUCCESS, successLoginResponseDto
+                )
+        );
     }
 }
