@@ -6,7 +6,6 @@ import lombok.Builder;
 public record KakaoUserInfoRequestDto(
         Long id,
         String name,
-        String rank,
         String profileImageUrl,
         String email
 ) {
