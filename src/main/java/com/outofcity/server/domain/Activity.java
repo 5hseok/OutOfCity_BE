@@ -51,10 +51,10 @@ public class Activity {
     @Column
     private String address;
 
-    @Column(precision = 9, scale = 6)
+    @Column
     private Double latitude;
 
-    @Column(precision = 9, scale = 6)
+    @Column
     private Double longitude;
 
     @Builder

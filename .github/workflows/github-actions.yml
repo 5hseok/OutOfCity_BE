@@ -13,6 +13,12 @@ jobs:
       - name: Check out the repository
         uses: actions/checkout@v3
 
+      - name: Set YML
+        run: |
+          mkdir -p src/main/resources
+          echo "${{ secrets.APPLICATION_YML }}" | base64 --decode > ./application.yml
+          find src
+
       # 2. Docker Hub 로그인
       - name: Log in to Docker Hub
         run: |
@@ -25,12 +31,12 @@ jobs:
       # 4. Docker 이미지 빌드 및 테스트 실행 후 push
       - name: Build Docker image for testing
         run: |
-          docker buildx build --platform linux/amd64 --load --tag 5hseok/OutOfCity-server:0.0.1 -f ./Dockerfile .
+          docker buildx build --platform linux/amd64 --load --tag 5hseok/outofcity-server:0.0.1 -f ./Dockerfile .
 
       # 5. Docker Hub로 이미지 push
       - name: Push Docker image to Docker Hub
         run: |
-          docker push 5hseok/OutOfCity-server:0.0.1
+          docker push 5hseok/outofcity-server:0.0.1
 
       # 6. EC2에 SSH로 연결하여 배포
       - name: Deploy to EC2 via SSH
@@ -41,20 +47,4 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
           script: |
-            # Docker Compose 파일이 있는 디렉토리로 이동
-            cd /home/ubuntu
-
-            # Docker 이미지 pull 및 컨테이너 재실행
-            sudo docker pull 5hseok/OutOfCity-server:0.0.1
-
-            # 기존 컨테이너 종료 및 제거
-            if [ "$(sudo docker ps -q -f name=spring_app)" ]; then
-              sudo docker stop spring_app && sudo docker rm spring_app
-            fi
-
-            # Docker Compose를 사용하여 컨테이너 실행
-            sudo docker-compose down
-            sudo docker-compose up --build -d
-
-            # spring_app 컨테이너의 로그 출력
-            sudo docker logs spring_app
+            sh /home/ubuntu/deploy.sh
