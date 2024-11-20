@@ -16,7 +16,6 @@ import java.util.List;
 public class GeneralMember {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "general_member_id")
     private Long generalMemberId;
 
@@ -33,15 +32,17 @@ public class GeneralMember {
     private String email;
 
     @Builder
-    public GeneralMember(String name, String rank, String profileImageUrl, String email) {
+    public GeneralMember(Long id, String name, String rank, String profileImageUrl, String email) {
+        this.generalMemberId = id;
         this.name = name;
         this.rank = rank;
         this.profileImageUrl = profileImageUrl;
         this.email = email;
     }
 
-    public GeneralMember of(String name, String rank, String profileImageUrl, String email) {
+    public GeneralMember of(Long id, String name, String rank, String profileImageUrl, String email) {
         return GeneralMember.builder()
+                .id(id)
                 .name(name)
                 .rank(rank)
                 .profileImageUrl(profileImageUrl)
