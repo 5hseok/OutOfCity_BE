@@ -24,15 +24,15 @@ public class Challenge {
     private String content;
 
     @Column
-    private LocalDateTime createdAt;
+    private LocalDate createdAt;
 
     @Builder
-    public Challenge(String content, LocalDateTime createdAt) {
+    public Challenge(String content, LocalDate createdAt) {
         this.content = content;
         this.createdAt = createdAt;
     }
 
-    public static Challenge of (String content, LocalDateTime createdAt) {
+    public static Challenge of (String content, LocalDate createdAt) {
         return Challenge.builder()
                 .content(content)
                 .createdAt(createdAt)
@@ -41,5 +41,9 @@ public class Challenge {
 
     public void adminUpdateChallenge(String content) {
         this.content = content;
+    }
+
+    public void updateCreatedAt(LocalDate createdAt) {
+        this.createdAt = createdAt;
     }
 }
