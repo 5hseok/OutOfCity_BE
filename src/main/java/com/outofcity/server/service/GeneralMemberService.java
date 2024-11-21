@@ -2,9 +2,11 @@ package com.outofcity.server.service;
 
 import com.outofcity.server.domain.GeneralMember;
 import com.outofcity.server.dto.member.kakaologin.response.SuccessLoginResponseDto;
+import com.outofcity.server.global.exception.BusinessException;
 import com.outofcity.server.global.exception.dto.oauth.KakaoTokenResponseDto;
 import com.outofcity.server.global.exception.dto.oauth.KakaoUserInfoRequestDto;
 import com.outofcity.server.global.exception.dto.oauth.KakaoUserInfoResponseDto;
+import com.outofcity.server.global.exception.message.ErrorMessage;
 import com.outofcity.server.global.jwt.JwtTokenProvider;
 import com.outofcity.server.global.jwt.UserAuthentication;
 import com.outofcity.server.repository.GeneralMemberRepository;
@@ -20,7 +22,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 @RequiredArgsConstructor
 @Service
 @Transactional
-public class KakaoLoginService {
+public class GeneralMemberService {
 
     @Value("${kakao.client_id}")
     private String clientId;
@@ -61,6 +63,7 @@ public class KakaoLoginService {
         return userInfo;
     }
 
+    // 사용자 정보 가져오기 - 이메일, 닉네임, 프로필 사진, 여행 등급
     public SuccessLoginResponseDto findUser(KakaoUserInfoResponseDto userInfo) {
 
         GeneralMember generalMember = generalMemberRepository.findById(userInfo.getId())
@@ -91,6 +94,7 @@ public class KakaoLoginService {
     }
 
 
+    // 사용자 정보 가져오기 - 이메일, 닉네임, 프로필 사진, 여행 등급
     public SuccessLoginResponseDto findUserWithReact(KakaoUserInfoRequestDto userInfo) {
 
         GeneralMember generalMember = generalMemberRepository.findById(userInfo.id())
@@ -118,6 +122,14 @@ public class KakaoLoginService {
                 .email(generalMember.getEmail())
                 .jwtToken(jwtToken)
                 .build();
+    }
+
+    // 일반 사용자의 여행 등급을 가져오는 메소드
+    public String getRank(String token) {
+        GeneralMember generalMember = generalMemberRepository.findById(jwtTokenProvider.getUserFromJwt(token))
+                .orElseThrow(() -> new BusinessException(ErrorMessage.GENERAL_MEMBER_NOT_FOUND));
+
+        return generalMember.getRank();
     }
 
 }
