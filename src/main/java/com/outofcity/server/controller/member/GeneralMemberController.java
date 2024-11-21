@@ -5,7 +5,7 @@ import com.outofcity.server.global.exception.dto.SuccessStatusResponse;
 import com.outofcity.server.global.exception.dto.oauth.KakaoUserInfoRequestDto;
 import com.outofcity.server.global.exception.dto.oauth.KakaoUserInfoResponseDto;
 import com.outofcity.server.global.exception.message.SuccessMessage;
-import com.outofcity.server.service.GeneralMemberService;
+import com.outofcity.server.service.member.GeneralMemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
