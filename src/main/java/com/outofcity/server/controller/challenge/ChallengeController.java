@@ -6,7 +6,6 @@ import com.outofcity.server.global.exception.message.SuccessMessage;
 import com.outofcity.server.service.challenge.ChallengeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
