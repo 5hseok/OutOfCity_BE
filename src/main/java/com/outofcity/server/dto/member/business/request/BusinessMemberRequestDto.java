@@ -6,9 +6,10 @@ public record BusinessMemberRequestDto (
     String businessAddress,
     String businessStartDate,
     String businessPhoneNumber,
-    String businessEmail
+    String businessEmail,
+    Boolean validate
 ){
-    public static BusinessMemberRequestDto of(String businessName, Long businessNumber, String businessAddress, String businessStartDate, String businessPhoneNumber, String businessEmail) {
-        return new BusinessMemberRequestDto(businessName, businessNumber, businessAddress, businessStartDate, businessPhoneNumber, businessEmail);
+    public static BusinessMemberRequestDto of(String businessName, Long businessNumber, String businessAddress, String businessStartDate, String businessPhoneNumber, String businessEmail, Boolean validate) {
+        return new BusinessMemberRequestDto(businessName, businessNumber, businessAddress, businessStartDate, businessPhoneNumber, businessEmail, validate);
     }
 }

@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import jakarta.persistence.*;
+
+import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,15 +27,15 @@ public class ReserveTime {
     private ReserveDate reserveDate;
 
     @Column(nullable = false)
-    private LocalDateTime reserveTime;
+    private Time reserveTime;
 
     @Builder
-    public ReserveTime(ReserveDate reserveDate, LocalDateTime reserveTime) {
+    public ReserveTime(ReserveDate reserveDate, Time reserveTime) {
         this.reserveDate = reserveDate;
         this.reserveTime = reserveTime;
     }
 
-    public static ReserveTime of(ReserveDate reserveDate, LocalDateTime reserveTime) {
+    public static ReserveTime of(ReserveDate reserveDate, Time reserveTime) {
         return ReserveTime.builder()
                 .reserveDate(reserveDate)
                 .reserveTime(reserveTime)

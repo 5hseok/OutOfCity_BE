@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
@@ -32,13 +32,19 @@ public class BusinessMemberService {
             throw new BusinessException(ErrorMessage.DUPLICATE_BUSINESS_MEMBER);
         }
 
+        //사업자 검증 확인
+        if (!businessMemberRequestDto.validate()){
+            log.info("사업자 등록정보를 확인받지 못했습니다.");
+            throw new BusinessException(ErrorMessage.INVALID_BUSINESS_MEMBER);
+        }
+
         // 사업 시작 날짜 파싱 - 이게 비어있으면 파싱이 안됨.
-        LocalDateTime businessStartDate;
+        LocalDate businessStartDate;
         try {
             if (businessMemberRequestDto.businessStartDate() == null) {
                 throw new BusinessException(ErrorMessage.INVALID_DATE);
             }
-            businessStartDate = LocalDateTime.parse(businessMemberRequestDto.businessStartDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+            businessStartDate = LocalDate.parse(businessMemberRequestDto.businessStartDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
         } catch (DateTimeParseException e) {
             throw new BusinessException(ErrorMessage.INVALID_DATE);
         }
