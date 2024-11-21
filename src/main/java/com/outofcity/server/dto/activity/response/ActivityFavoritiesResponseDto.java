@@ -1,4 +1,4 @@
-package com.outofcity.server.dto.activity;
+package com.outofcity.server.dto.activity.response;
 
 
 public record ActivityFavoritiesResponseDto(

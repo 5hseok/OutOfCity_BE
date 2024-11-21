@@ -25,14 +25,14 @@ public class ReserveDate {
     private Activity activity;
 
     @Column(nullable = false)
-    private LocalDateTime reserveDate;
+    private LocalDate reserveDate;
 
     @Builder
-    public ReserveDate(Activity activity, LocalDateTime reserveDate) {
+    public ReserveDate(Activity activity, LocalDate reserveDate) {
         this.activity = activity;
         this.reserveDate = reserveDate;
     }
-    public static ReserveDate of(Activity activity, LocalDateTime reserveDate) {
+    public static ReserveDate of(Activity activity, LocalDate reserveDate) {
         return ReserveDate.builder()
                 .activity(activity)
                 .reserveDate(reserveDate)
