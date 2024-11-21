@@ -54,10 +54,10 @@ public class Review {
     private Long likes;
 
     @Column()
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 
     @Builder
-    public Review(Activity activity, GeneralMember generalMember, BusinessMember businessMember, Integer location, Integer service, Integer interest, Integer price, Double rating, String content, Long likes, LocalDate createdAt) {
+    public Review(Activity activity, GeneralMember generalMember, BusinessMember businessMember, Integer location, Integer service, Integer interest, Integer price, Double rating, String content, Long likes, LocalDateTime createdAt) {
         this.activity = activity;
         this.generalMember = generalMember;
         this.businessMember = businessMember;
@@ -71,7 +71,7 @@ public class Review {
         this.createdAt = createdAt;
     }
 
-    public static Review of(Activity activity, GeneralMember generalMember, BusinessMember businessMember, Integer location, Integer service, Integer interest, Integer price, Double rating, String content, Long likes, LocalDate createdAt) {
+    public static Review of(Activity activity, GeneralMember generalMember, BusinessMember businessMember, Integer location, Integer service, Integer interest, Integer price, Double rating, String content, Long likes, LocalDateTime createdAt) {
         return Review.builder()
                 .activity(activity)
                 .generalMember(generalMember)

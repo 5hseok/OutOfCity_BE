@@ -1,14 +1,16 @@
 package com.outofcity.server.service.activity;
 
-import com.outofcity.server.domain.ActivityFavorities;
 import com.outofcity.server.domain.GeneralMember;
 import com.outofcity.server.domain.Reserve;
+import com.outofcity.server.domain.Review;
+import com.outofcity.server.dto.activity.response.CompletedActivityResponseDto;
 import com.outofcity.server.dto.activity.response.ReserveActivityResponseDto;
 import com.outofcity.server.global.exception.BusinessException;
 import com.outofcity.server.global.exception.message.ErrorMessage;
 import com.outofcity.server.global.jwt.JwtTokenProvider;
 import com.outofcity.server.repository.GeneralMemberRepository;
 import com.outofcity.server.repository.ReserveRepository;
+import com.outofcity.server.repository.ReviewRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +29,7 @@ public class ReserveActivityService {
     private final ReserveRepository reserveRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final GeneralMemberRepository generalMemberRepository;
+    private final ReviewRepository reviewRepository;
 
     // 예약 목록 조회
     public List<ReserveActivityResponseDto> getReservations(String token) {
@@ -40,9 +43,59 @@ public class ReserveActivityService {
 
         // 각 예약에서 ReserveActivityResponseDto로 변환
         return reserveList.stream()
+                .filter(reserve -> "reserved".equals(reserve.getReserveState()))
                 .map(this::convertToDtoWithReserveNumber)
                 .collect(Collectors.toList());
     }
+
+    // 완료된 예약 목록 조회
+    public List<CompletedActivityResponseDto> getCompletedReservations(String token) {
+        // 토큰으로 일반회원 조회
+        Long generalMemberId = jwtTokenProvider.getUserFromJwt(token);
+        GeneralMember generalMember = generalMemberRepository.findById(generalMemberId)
+                .orElseThrow(() -> new BusinessException(ErrorMessage.GENERAL_MEMBER_NOT_FOUND));
+
+        // 일반회원의 예약 목록 조회
+        List<Reserve> reserveList = reserveRepository.findAllByGeneralMember(generalMember);
+
+        // 각 예약에서 ReserveActivityResponseDto로 변환
+        return reserveList.stream()
+                .filter(reserve -> "completed".equals(reserve.getReserveState()))
+                .map(this::convertToDtoToActivity)
+                .collect(Collectors.toList());
+    }
+
+    private CompletedActivityResponseDto convertToDtoToActivity(Reserve reserve) {
+        // Reserve와 연결된 Activity에 대해 리뷰 목록 조회
+        List<Review> reviews = reviewRepository.findByActivity(reserve.getActivity());
+
+        // 리뷰 리스트를 DTO 형식으로 변환
+        List<CompletedActivityResponseDto.Review> reviewDtos = reviews.stream()
+                .map(review -> new CompletedActivityResponseDto.Review(
+                        review.getReviewId(),
+                        new CompletedActivityResponseDto.Review.Writer(review.getGeneralMember().getGeneralMemberId(), review.getGeneralMember().getName()),
+                        review.getLocation(),
+                        review.getService(),
+                        review.getInterest(),
+                        review.getPrice(),
+                        review.getRating(),
+                        review.getContent(),
+                        review.getLikes(),
+                        review.getCreatedAt().toString()
+                ))
+                .collect(Collectors.toList());
+
+        // CompletedActivityResponseDto 생성 후 반환
+        return new CompletedActivityResponseDto(
+                reserve.getActivity().getName(),
+                reserve.getReservedAt().toString(),  // 필요한 형식으로 변환
+                reserve.getReservedParticipants(),
+                reserve.getActivity().getActivityPhoto(),
+                !reviewDtos.isEmpty(),
+                reviewDtos
+        );
+    }
+
 
     private ReserveActivityResponseDto convertToDtoWithReserveNumber(Reserve reserve) {
         // DateTimeFormatter를 사용하여 하이픈 없는 포맷 생성

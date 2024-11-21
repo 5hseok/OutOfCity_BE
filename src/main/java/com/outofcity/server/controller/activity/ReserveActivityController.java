@@ -1,5 +1,7 @@
 package com.outofcity.server.controller.activity;
 
+import com.outofcity.server.dto.activity.response.ActivityResponseDto;
+import com.outofcity.server.dto.activity.response.CompletedActivityResponseDto;
 import com.outofcity.server.dto.activity.response.ReserveActivityResponseDto;
 import com.outofcity.server.global.exception.dto.SuccessStatusResponse;
 import com.outofcity.server.global.exception.message.SuccessMessage;
@@ -25,5 +27,10 @@ public class ReserveActivityController {
     @GetMapping("/reservations")
     public ResponseEntity<SuccessStatusResponse<List<ReserveActivityResponseDto>>> getReservations(@RequestHeader("Authorization") String token) {
         return ResponseEntity.ok(SuccessStatusResponse.of(SuccessMessage.RESERVE_ACTIVITY_READ_SUCCESS, reserveActivityService.getReservations(token)));
+    }
+
+    @GetMapping("/completed")
+    public ResponseEntity<SuccessStatusResponse<List<CompletedActivityResponseDto>>> getCompletedReservations(@RequestHeader("Authorization") String token) {
+        return ResponseEntity.ok(SuccessStatusResponse.of(SuccessMessage.COMPLETED_ACTIVITY_READ_SUCCESS, reserveActivityService.getCompletedReservations(token)));
     }
 }
