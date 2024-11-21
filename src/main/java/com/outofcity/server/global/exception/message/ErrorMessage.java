@@ -20,7 +20,10 @@ public enum ErrorMessage {
     UNDETERMINED_FILE(HttpStatus.BAD_REQUEST.value(), "식별할 수 없는 파일입니다."),
     DUPLICATE_BUSINESS_MEMBER(HttpStatus.CONFLICT.value(), "이미 가입한 사업자입니다."),
     INVALID_DATE(HttpStatus.NO_CONTENT.value(), "날짜 형식이 잘못되었습니다."),
-    DATABASE_ERROR(HttpStatus.CONFLICT.value(), "데이터베이스 오류가 발생했습니다."),;
+    DATABASE_ERROR(HttpStatus.CONFLICT.value(), "데이터베이스 오류가 발생했습니다."),
+    NOT_FOUND_FAVORITES(HttpStatus.NO_CONTENT.value(), "찜한 액티비티가 없습니다."),
+    ACTIVITY_NOT_FOUND(HttpStatus.NO_CONTENT.value(), "액티비티를 찾을 수 없습니다."),
+    ACTIVITY_LIKE_NOT_FOUND(HttpStatus.NO_CONTENT.value(), "찜한 액티비티를 찾을 수 없습니다."),;
     private final int code;
     private final String message;
 }
