@@ -24,7 +24,8 @@ public enum ErrorMessage {
     NOT_FOUND_FAVORITES(HttpStatus.NO_CONTENT.value(), "찜한 액티비티가 없습니다."),
     ACTIVITY_NOT_FOUND(HttpStatus.NO_CONTENT.value(), "액티비티를 찾을 수 없습니다."),
     ACTIVITY_LIKE_NOT_FOUND(HttpStatus.NO_CONTENT.value(), "찜한 액티비티를 찾을 수 없습니다."),
-    INVALID_BUSINESS_MEMBER(HttpStatus.FORBIDDEN.value(), "사업자 등록정보를 확인받지 못했습니다."),;
+    INVALID_BUSINESS_MEMBER(HttpStatus.FORBIDDEN.value(), "사업자 등록정보를 확인받지 못했습니다."),
+    GENERAL_MEMBER_NOT_FOUND(HttpStatus.NO_CONTENT.value(), "일반회원을 찾을 수 없습니다."),;
     private final int code;
     private final String message;
 }

@@ -16,7 +16,8 @@ public enum SuccessMessage {
     MYPAGE_GET_SUCCESS(HttpStatus.OK.value(),"마이페이지 조회에 성공하였습니다."),
     ACTIVITY_LIKE_READ_SUCCESS(HttpStatus.OK.value(), "액티비티 찜 목록 조회에 성공하였습니다."),
     ACTIVITY_LIKE_ADD_SUCCESS(HttpStatus.CREATED.value(), "액티비티 찜에 성공하였습니다."),
-    ACTIVITY_LIKE_DELETE_SUCCESS(HttpStatus.OK.value(), "액티비티 찜 취소에 성공하였습니다."),;
+    ACTIVITY_LIKE_DELETE_SUCCESS(HttpStatus.OK.value(), "액티비티 찜 취소에 성공하였습니다."),
+    RESERVE_ACTIVITY_READ_SUCCESS(HttpStatus.OK.value(), "예약 액티비티 목록 조회에 성공하였습니다."),;
     private final int code;
     private final String message;
 }
