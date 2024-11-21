@@ -4,7 +4,7 @@ import com.outofcity.server.dto.member.business.request.BusinessMemberRequestDto
 import com.outofcity.server.dto.member.business.response.BusinessMemberResponseDto;
 import com.outofcity.server.global.exception.dto.SuccessStatusResponse;
 import com.outofcity.server.global.exception.message.SuccessMessage;
-import com.outofcity.server.service.BusinessMemberService;
+import com.outofcity.server.service.member.BusinessMemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

@@ -1,4 +1,4 @@
-package com.outofcity.server.service;
+package com.outofcity.server.service.member;
 
 import com.outofcity.server.domain.BusinessMember;
 import com.outofcity.server.dto.member.business.request.BusinessMemberRequestDto;
