@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -29,7 +29,7 @@ public class BusinessMember {
     private String address;
 
     @Column
-    private LocalDateTime startDate;
+    private LocalDate startDate;
 
     @Column
     private String phoneNumber;
@@ -38,7 +38,7 @@ public class BusinessMember {
     private String email;
 
     @Builder
-    public BusinessMember(String name, Long businessNumber, String address, LocalDateTime startDate, String phoneNumber, String email) {
+    public BusinessMember(String name, Long businessNumber, String address, LocalDate startDate, String phoneNumber, String email) {
         this.name = name;
         this.businessNumber = businessNumber;
         this.address = address;
@@ -47,7 +47,7 @@ public class BusinessMember {
         this.email = email;
     }
 
-    public static BusinessMember of(String name, Long businessNumber, String address, LocalDateTime startDate, String phoneNumber, String email) {
+    public static BusinessMember of(String name, Long businessNumber, String address, LocalDate startDate, String phoneNumber, String email) {
         return BusinessMember.builder()
                 .name(name)
                 .businessNumber(businessNumber)
