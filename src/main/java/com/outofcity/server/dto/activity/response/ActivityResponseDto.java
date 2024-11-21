@@ -1,6 +1,4 @@
-package com.outofcity.server.dto.activity;
-
-import lombok.Getter;
+package com.outofcity.server.dto.activity.response;
 
 import java.time.LocalDateTime;
 

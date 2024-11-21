@@ -1,7 +1,7 @@
 package com.outofcity.server.controller.activity;
 
-import com.outofcity.server.dto.activity.ActivityFavoritiesResponseDto;
-import com.outofcity.server.dto.activity.ActivityResponseDto;
+import com.outofcity.server.dto.activity.response.ActivityFavoritiesResponseDto;
+import com.outofcity.server.dto.activity.response.ActivityResponseDto;
 import com.outofcity.server.global.exception.dto.SuccessStatusResponse;
 import com.outofcity.server.global.exception.message.SuccessMessage;
 import com.outofcity.server.service.activity.ActivityFavoritiesService;
