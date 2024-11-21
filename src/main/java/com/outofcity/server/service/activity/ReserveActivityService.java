@@ -43,7 +43,7 @@ public class ReserveActivityService {
 
         // 각 예약에서 ReserveActivityResponseDto로 변환
         return reserveList.stream()
-                .filter(reserve -> "예약중".equals(reserve.getReserveState()))
+                .filter(reserve -> "reserved".equals(reserve.getReserveState()))
                 .map(this::convertToDtoWithReserveNumber)
                 .collect(Collectors.toList());
     }
@@ -60,7 +60,7 @@ public class ReserveActivityService {
 
         // 각 예약에서 ReserveActivityResponseDto로 변환
         return reserveList.stream()
-                .filter(reserve -> "체험완료".equals(reserve.getReserveState()))
+                .filter(reserve -> "completed".equals(reserve.getReserveState()))
                 .map(this::convertToDtoToActivity)
                 .collect(Collectors.toList());
     }
