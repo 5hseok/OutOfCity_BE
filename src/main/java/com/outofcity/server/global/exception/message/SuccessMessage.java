@@ -21,7 +21,8 @@ public enum SuccessMessage {
     COMPLETED_ACTIVITY_READ_SUCCESS(HttpStatus.OK.value(), "체험 완료한 액티비티 목록 조회에 성공하였습니다."),
     RANK_GET_SUCCESS(HttpStatus.OK.value(), "사용자 등급 조회에 성공하였습니다."),
     REVIEW_ADD_SUCCESS(HttpStatus.OK.value(), "리뷰 등록에 성공하였습니다."),
-    CHALLENGE_READ_SUCCESS(HttpStatus.OK.value(), "오늘의 챌린지 조회에 성공하였습니다."),;
+    CHALLENGE_READ_SUCCESS(HttpStatus.OK.value(), "오늘의 챌린지 조회에 성공하였습니다."),
+    CHALLENGE__HISTORY_READ_SUCCESS(HttpStatus.OK.value(), "사용자의 지금까지 챌린지 현황 조회에 성공하였습니다."),;
     private final int code;
     private final String message;
 }
