@@ -31,23 +31,28 @@ public class UserChallenge {
     @Column(length = 255)
     private String imageUrl;
 
-    @Column(length = 10, nullable = false, columnDefinition = "varchar(10) default '미인증'")
+    @Column(length = 20, nullable = false)
     private String certification;
 
+    @Column(nullable = false)
+    private LocalDate performedAt;
+
     @Builder
-    public UserChallenge(GeneralMember generalMember, Challenge challenge, String imageUrl, String certification) {
+    public UserChallenge(GeneralMember generalMember, Challenge challenge, String imageUrl, String certification, LocalDate performedAt) {
         this.generalMember = generalMember;
         this.challenge = challenge;
         this.imageUrl = imageUrl;
         this.certification = certification;
+        this.performedAt = performedAt;
     }
 
-    public static UserChallenge of(GeneralMember generalMember, Challenge challenge, String imageUrl, String certification) {
+    public static UserChallenge of(GeneralMember generalMember, Challenge challenge, String imageUrl, String certification, LocalDate performedAt) {
         return UserChallenge.builder()
                 .generalMember(generalMember)
                 .challenge(challenge)
                 .imageUrl(imageUrl)
                 .certification(certification)
+                .performedAt(performedAt)
                 .build();
     }
 

@@ -22,6 +22,9 @@ public class GeneralMember {
     @Column(nullable = false)
     private String name;
 
+    @Column
+    private String nickname;
+
     @Column(name = "`rank`", columnDefinition = "varchar(20) default '씨앗'")
     private String rank;
 
@@ -35,6 +38,7 @@ public class GeneralMember {
     public GeneralMember(Long id, String name, String rank, String profileImageUrl, String email) {
         this.generalMemberId = id;
         this.name = name;
+        this.nickname = name;
         this.rank = rank;
         this.profileImageUrl = profileImageUrl;
         this.email = email;
@@ -50,8 +54,8 @@ public class GeneralMember {
                 .build();
     }
 
-    public void userUpdateGeneralMember(String name) {
-        this.name = name;
+    public void userUpdateGeneralMember(String nickname) {
+        this.nickname = nickname;
     }
 
     public void adminUpdateGeneralMember(String rank) {
