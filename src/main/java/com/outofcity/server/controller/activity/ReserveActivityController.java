@@ -1,19 +1,17 @@
 package com.outofcity.server.controller.activity;
 
-import com.outofcity.server.dto.activity.response.ActivityFavoritiesResponseDto;
-import com.outofcity.server.dto.activity.response.ActivityReserveResDto;
+import com.outofcity.server.dto.activity.response.ActivityReserveRequestDto;
+import com.outofcity.server.dto.activity.response.ActivityReserveResponseDto;
 import com.outofcity.server.dto.activity.response.ReserveActivityResponseDto;
 import com.outofcity.server.global.exception.dto.SuccessStatusResponse;
 import com.outofcity.server.global.exception.message.SuccessMessage;
 //import com.outofcity.server.service.activity.ActivityReserveService;
+import com.outofcity.server.service.activity.ActivityReserveService;
 import com.outofcity.server.service.activity.ReserveActivityService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,7 +22,7 @@ import java.util.List;
 public class ReserveActivityController {
 
     private final ReserveActivityService reserveActivityService;
-//    private final ActivityReserveService activityReserveService;
+    private final ActivityReserveService activityReserveService;
 
 
     @GetMapping("/reservations")
@@ -33,10 +31,12 @@ public class ReserveActivityController {
     }
 
     @PostMapping("/reserve")
-    public ResponseEntity<SuccessStatusResponse<ReserveActivityResponseDto>> createReservation(
+    public ResponseEntity<SuccessStatusResponse<ActivityReserveResponseDto>> createReservation(
             @RequestHeader("Authorization") String token,
-            @RequestBody ActivityReserveResDto activityReserveResDto) {
-        ActivityReserveResDto actvityreserveDto = activityReserveService.createReservation(token, activityReserveResDto);
-        return ResponseEntity.ok(SuccessStatusResponse.of(SuccessMessage.RESERVE_ACTIVITY_READ_SUCCESS, activityReserveService.createReservation(token, activityReserveResDto)));
+            @RequestBody ActivityReserveRequestDto activityReserveRequestDto) {
+
+        ActivityReserveResponseDto activityReserveResponseDto = activityReserveService.createReservation(token, activityReserveRequestDto);
+        return ResponseEntity.ok(SuccessStatusResponse.of(SuccessMessage.RESERVE_ACTIVITY_READ_SUCCESS, activityReserveResponseDto));
     }
+
 }
