@@ -36,7 +36,14 @@ public class ReserveActivityController {
             @RequestBody ActivityReserveRequestDto activityReserveRequestDto) {
 
         ActivityReserveResponseDto activityReserveResponseDto = activityReserveService.createReservation(token, activityReserveRequestDto);
-        return ResponseEntity.ok(SuccessStatusResponse.of(SuccessMessage.RESERVE_ACTIVITY_READ_SUCCESS, activityReserveResponseDto));
+        return ResponseEntity.ok(SuccessStatusResponse.of(SuccessMessage.RESERVE_ACTIVITY_RESERVE_SUCCESS, activityReserveResponseDto));
     }
 
+    @DeleteMapping("/reserve/{reserveId}")
+    public ResponseEntity<SuccessStatusResponse<SuccessMessage>> deleteFavorite(@RequestHeader ("Authorization") String token, @PathVariable Long reserveId) {
+        return ResponseEntity.ok(SuccessStatusResponse.of(
+                        SuccessMessage.RESERVE_ACTIVITY_DELETE_SUCCESS, activityReserveService.deleteReservation(token, reserveId)
+                )
+        );
+    }
 }
