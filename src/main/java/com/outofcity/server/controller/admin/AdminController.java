@@ -23,7 +23,7 @@ public class AdminController {
     @PostMapping("/activities")
     public ResponseEntity<SuccessStatusResponse<Void>> registerActivity(@RequestHeader("Authorization") String token, @RequestBody ActivityRegisterRequestDto requestDto) {
         adminActivityService.registerActivity(token, requestDto);
-        return ResponseEntity.ok(SuccessStatusResponse.of(SuccessMessage.ADMIN_CHALLENGE_REGISTER_SUCCESS));
+        return ResponseEntity.ok(SuccessStatusResponse.of(SuccessMessage.ADMIN_ACTIVITY_REGISTER_SUCCESS));
     }
 
     //관리자 챌린지 인증

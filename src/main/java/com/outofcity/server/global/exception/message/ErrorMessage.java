@@ -47,7 +47,13 @@ public enum ErrorMessage {
     ALREADY_CERTIFIED(HttpStatus.CONTINUE.value(), "이미 인증된 챌린지입니다."),
     FAIL_PROOF_CHALLENGE(HttpStatus.FORBIDDEN.value(), "챌린지 인증에 실패했습니다."),
     NOT_FOUND_BUSINESS_MEMBER(HttpStatus.NO_CONTENT.value(), "사업자를 찾을 수 없습니다."),
-    NOT_FOUND_SUB_CATEGORY(HttpStatus.NO_CONTENT.value(), "서브 카테고리를 찾을 수 없습니다."),;
+    NOT_FOUND_SUB_CATEGORY(HttpStatus.NO_CONTENT.value(), "서브 카테고리를 찾을 수 없습니다."),
+    NOT_FOUND_RESERVE_DATE(HttpStatus.NO_CONTENT.value(), "예약 가능한 날짜를 찾을 수 없습니다."),
+    NOT_FOUND_RESERVE_TIME(HttpStatus.NO_CONTENT.value(), "예약 가능한 시간을 찾을 수 없습니다."),
+    FAIL_TO_REGISTER_ACTIVITY(HttpStatus.FORBIDDEN.value(), "액티비티 등록에 실패했습니다."),
+    FAIL_TO_REGISTER_SUB_CATEGORY(HttpStatus.FORBIDDEN.value(), "서브 카테고리 등록에 실패했습니다."),
+    TYPE_NOT_EXIST(HttpStatus.NO_CONTENT.value(), "타입이 존재하지 않습니다."),
+    ALREADY_EXIST_ACTIVITY(HttpStatus.NO_CONTENT.value(), "이미 존재하는 액티비티입니다."),;
     private final int code;
     private final String message;
 }
