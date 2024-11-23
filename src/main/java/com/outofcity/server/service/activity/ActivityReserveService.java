@@ -3,7 +3,6 @@ package com.outofcity.server.service.activity;
 import com.outofcity.server.domain.*;
 import com.outofcity.server.dto.activity.response.ActivityReserveRequestDto;
 import com.outofcity.server.dto.activity.response.ActivityReserveResponseDto;
-import com.outofcity.server.dto.member.business.response.BusinessMemberResponseDto;
 import com.outofcity.server.global.exception.BusinessException;
 import com.outofcity.server.global.exception.message.ErrorMessage;
 import com.outofcity.server.global.exception.message.SuccessMessage;
@@ -14,11 +13,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.sql.Time;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -44,7 +40,7 @@ public class ActivityReserveService {
         Activity activity = activityRepository.findById(activityReserveRequestDto.activityId())
                 .orElseThrow(() -> new BusinessException(ErrorMessage.ACTIVITY_NOT_FOUND));
 
-        List<ReserveDate> reserveDates = reserveDateRepository.findByActivity(activity);
+        List<ReserveDate> reserveDates = reserveDateRepository.findAllByActivity(activity);
 
         // 예약 가능한 날짜가 있는지 확인
         ReserveDate selectedReserveDate = reserveDates.stream()
@@ -52,7 +48,7 @@ public class ActivityReserveService {
                 .findFirst()
                 .orElseThrow(() -> new BusinessException(ErrorMessage.INVALID_RESERVE_DATE));
 
-        List<ReserveTime> reserveTimes = reserveTimeRepository.findByReserveDate(selectedReserveDate);
+        List<ReserveTime> reserveTimes = reserveTimeRepository.findAllByReserveDate(selectedReserveDate);
 
         // 예약 가능한 시간인지 확인
         ReserveTime selectedReserveTime = reserveTimes.stream()

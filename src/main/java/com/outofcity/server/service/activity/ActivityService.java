@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.chrono.ChronoLocalDate;
 import java.util.Comparator;
 import java.util.List;
@@ -36,7 +35,7 @@ public class ActivityService {
         Type getType = typeRepository.findByName(requestDto.type());
 
         //타입에 맞는 타입 액티비티 리스트 조회
-        List<ActivityType> activityTypeList = activityTypeRepository.findByType(getType);
+        List<ActivityType> activityTypeList = activityTypeRepository.findAllByType(getType);
 
         // 각 타입 액티비티 항목에서 액티비티 목록 조회
         List<Activity> activityList = activityTypeList.stream()

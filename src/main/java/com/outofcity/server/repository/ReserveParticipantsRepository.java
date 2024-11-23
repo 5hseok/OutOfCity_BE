@@ -1,6 +1,5 @@
 package com.outofcity.server.repository;
 
-import com.outofcity.server.domain.GeneralMember;
 import com.outofcity.server.domain.ReserveParticipants;
 import com.outofcity.server.domain.ReserveTime;
 import org.springframework.data.jpa.repository.JpaRepository;
