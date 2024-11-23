@@ -12,7 +12,6 @@ public record ActivityCartResponseDto(
         Long activityId,             // 액티비티 ID
         Long userId,                 // 사용자 ID
         LocalDate date,              // 예약 날짜
-        @JsonFormat(pattern = "HH:mm")
         LocalTime time,              // 예약 시간
         Integer participants,        // 예약할 참가자 수
         Integer price,               // 액티비티 가격

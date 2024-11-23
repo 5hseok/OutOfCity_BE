@@ -25,16 +25,19 @@ public class ReserveActivityController {
     private final ActivityReserveService activityReserveService;
 
 
+    // 예약활동 조회
     @GetMapping("/reservations")
     public ResponseEntity<SuccessStatusResponse<List<ReserveActivityResponseDto>>> getReservations(@RequestHeader("Authorization") String token) {
         return ResponseEntity.ok(SuccessStatusResponse.of(SuccessMessage.RESERVE_ACTIVITY_READ_SUCCESS, reserveActivityService.getReservations(token)));
     }
 
+    // 완료된 활동 조회
     @GetMapping("/completed")
     public ResponseEntity<SuccessStatusResponse<List<CompletedActivityResponseDto>>> getCompletedReservations(@RequestHeader("Authorization") String token) {
         return ResponseEntity.ok(SuccessStatusResponse.of(SuccessMessage.COMPLETED_ACTIVITY_READ_SUCCESS, reserveActivityService.getCompletedReservations(token)));
     }
 
+    // 예약활동 추가
     @PostMapping("/reserve")
     public ResponseEntity<SuccessStatusResponse<ActivityReserveResponseDto>> createReservation(
             @RequestHeader("Authorization") String token,
@@ -44,6 +47,7 @@ public class ReserveActivityController {
         return ResponseEntity.ok(SuccessStatusResponse.of(SuccessMessage.RESERVE_ACTIVITY_RESERVE_SUCCESS, activityReserveResponseDto));
     }
 
+    // 예약활동 삭제
     @DeleteMapping("/reserve/{reserveId}")
     public ResponseEntity<SuccessStatusResponse<SuccessMessage>> deleteReservation(@RequestHeader ("Authorization") String token, @PathVariable Long reserveId) {
         return ResponseEntity.ok(SuccessStatusResponse.of(
