@@ -67,7 +67,7 @@ public class ReserveActivityService {
 
     private CompletedActivityResponseDto convertToDtoToActivity(Reserve reserve) {
         // Reserve와 연결된 Activity에 대해 리뷰 목록 조회
-        List<Review> reviews = reviewRepository.findByActivity(reserve.getActivity());
+        List<Review> reviews = reviewRepository.findAllByActivity(reserve.getActivity());
 
         // 리뷰 리스트를 DTO 형식으로 변환
         List<CompletedActivityResponseDto.Review> reviewDtos = reviews.stream()
