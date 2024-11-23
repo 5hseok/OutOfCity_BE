@@ -52,7 +52,7 @@ public class ActivityReserveService {
 
         // 예약 가능한 시간인지 확인
         ReserveTime selectedReserveTime = reserveTimes.stream()
-                .filter(time -> time.getReserveTime().toLocalTime().equals(activityReserveRequestDto.reserveTime().toLocalTime()))
+                .filter(time -> time.getReserveTime().equals(activityReserveRequestDto.reserveTime().toLocalTime()))
                 .findFirst()
                 .orElseThrow(() -> new BusinessException(ErrorMessage.INVALID_RESERVE_TIME));
 
@@ -103,7 +103,7 @@ public class ActivityReserveService {
                 reserve.getReserveId(),
                 activity.getActivityId(),
                 selectedReserveDate.getReserveDate().atStartOfDay(),
-                selectedReserveTime.getReserveTime().toLocalTime().atDate(selectedReserveDate.getReserveDate()),
+                selectedReserveTime.getReserveTime().atDate(selectedReserveDate.getReserveDate()),
                 activity.getPrice(),
                 activityReserveRequestDto.reserveParticipants(),
                 remainParticipantsVar,

@@ -33,6 +33,13 @@ public class ActivityController {
         ));
     }
 
+    @GetMapping("/popular")
+    public ResponseEntity<SuccessStatusResponse<List<ActivityResponseDto>>> getPopularActivities() {
+        return ResponseEntity.ok(SuccessStatusResponse.of(
+                SuccessMessage.ACTIVITY_POPULAR_READ_SUCCESS, activityService.getPopularActivities()
+        ));
+    }
+
     // 일반 사용자 액티비티 찜 목록 조회
     @GetMapping("/favorities")
     public ResponseEntity<SuccessStatusResponse<List<ActivityResponseDto>>> getFavorites(@RequestHeader ("Authorization") String token) {
