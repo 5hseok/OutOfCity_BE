@@ -21,7 +21,7 @@ public class GeneralMemberController {
     private final GeneralMemberService generalMemberService;
 
     //카카오 로그인 메소드
-    @GetMapping("/login/kakao")
+    @PostMapping("/login/kakao")
     public ResponseEntity<SuccessStatusResponse<SuccessLoginResponseDto>> login(@RequestBody KakaoUserInfoRequestDto userInfo) {
         // 3. 사용자 로그인 또는 회원가입 처리
         SuccessLoginResponseDto successLoginResponseDto = generalMemberService.findUserWithReact(userInfo);

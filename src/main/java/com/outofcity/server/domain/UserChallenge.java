@@ -60,7 +60,7 @@ public class UserChallenge {
         this.imageUrl = imageUrl;
     }
 
-    public void adminUpdateUserChallenge(String imageUrl, String certification) {
+    public void adminUpdateUserChallenge(String certification) {
         this.certification = certification;
     }
 }

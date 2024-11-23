@@ -49,7 +49,7 @@ public class ActivityReserveService {
                 .orElseThrow(() -> new BusinessException(ErrorMessage.INVALID_RESERVE_DATE));
 
         List<ReserveTime> reserveTimes = reserveTimeRepository.findAllByReserveDate(selectedReserveDate);
-
+        log.info("reserveTimes: {}", reserveTimes);
         // 예약 가능한 시간인지 확인
         ReserveTime selectedReserveTime = reserveTimes.stream()
                 .filter(time -> time.getReserveTime().equals(activityReserveRequestDto.reserveTime().toLocalTime()))

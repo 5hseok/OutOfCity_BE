@@ -85,7 +85,7 @@ public class ActivityCartService {
         }
 
         ReserveTime selectedReserveTime = reserveTimes.stream()
-                .filter(time -> time.getReserveTime().toLocalTime().equals(activityCartRequestDto.time()))
+                .filter(time -> time.getReserveTime().equals(activityCartRequestDto.time()))
                 .findFirst()
                 .orElseThrow(() -> {
                     log.error("Invalid reserve time provided: {}", activityCartRequestDto.time());
@@ -119,7 +119,7 @@ public class ActivityCartService {
                 activity.getActivityId(),
                 generalMemberId,
                 selectedReserveDate.getReserveDate(),
-                selectedReserveTime.getReserveTime().toLocalTime(),
+                selectedReserveTime.getReserveTime(),
                 activityCartRequestDto.participants(),
                 activity.getPrice(),
                 cart.getCartId()
@@ -203,7 +203,7 @@ public class ActivityCartService {
                 cartItem.getActivity().getActivityId(),
                 cartItem.getCart().getGeneralMember().getGeneralMemberId(),
                 cartItem.getReserveDate().getReserveDate(),
-                cartItem.getReserveTime().getReserveTime().toLocalTime(),
+                cartItem.getReserveTime().getReserveTime(),
                 cartItem.getReserveParticipants().getMaxParticipants(),
                 cartItem.getActivity().getPrice(),
                 cartItem.getCart().getCartId()

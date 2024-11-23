@@ -28,6 +28,7 @@ public class ActivityService {
     private final TypeRepository typeRepository;
     private final ReserveDateRepository reserveDateRepository;
     private final ActivityRepository activityRepository;
+    private final ActivityImageRepository activityImageRepository;
 
     public List<ActivityResponseDto> getTypePopularActivities(ActivityTypeRequestDto requestDto) {
 
@@ -103,10 +104,14 @@ public class ActivityService {
     }
 
     private ActivityResponseDto convertToDto(Activity activity) {
+        List<ActivityImage> activityImages = activityImageRepository.findAllByActivity(activity);
+
         return ActivityResponseDto.of(
                 activity.getActivityId(),
                 activity.getName(),
-                activity.getActivityPhoto(),
+                activityImages.stream()
+                        .map(ActivityImage::getImageUrl)
+                        .collect(Collectors.toList()),
                 activity.getDescription(),
                 activity.getState(),
                 activity.getPrice(),
