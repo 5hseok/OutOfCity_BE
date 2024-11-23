@@ -84,6 +84,7 @@ public class ActivityCartService {
             throw new BusinessException(ErrorMessage.INVALID_RESERVE_TIME);
         }
 
+        log.info("Fetching reserve times for reserve date: {}", selectedReserveDate.getReserveDate());
         ReserveTime selectedReserveTime = reserveTimes.stream()
                 .filter(time -> time.getReserveTime().equals(activityCartRequestDto.time()))
                 .findFirst()

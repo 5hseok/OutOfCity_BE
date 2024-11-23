@@ -1,6 +1,7 @@
 package com.outofcity.server.controller.activity;
 
 import com.outofcity.server.dto.activity.request.ActivityTypeRequestDto;
+import com.outofcity.server.dto.activity.response.ActivityDetailResponseDto;
 import com.outofcity.server.dto.activity.response.ActivityFavoritiesResponseDto;
 import com.outofcity.server.dto.activity.response.ActivityResponseDto;
 import com.outofcity.server.global.exception.dto.SuccessStatusResponse;
@@ -25,10 +26,9 @@ public class ActivityController {
 
     //상세 조회
     @GetMapping("/{activityId}")
-    public ResponseEntity<SuccessStatusResponse<Void>> getActivity(@PathVariable Long activityId) {
-        activityService.getActivity(activityId);
+    public ResponseEntity<SuccessStatusResponse<ActivityDetailResponseDto>> getActivity(@RequestHeader ("Authorization") String token, @PathVariable Long activityId) {
         return ResponseEntity.ok(SuccessStatusResponse.of(
-                SuccessMessage.ACTIVITY_READ_SUCCESS
+                SuccessMessage.ACTIVITY_READ_SUCCESS,activityService.getActivity(token, activityId)
         ));
     }
 

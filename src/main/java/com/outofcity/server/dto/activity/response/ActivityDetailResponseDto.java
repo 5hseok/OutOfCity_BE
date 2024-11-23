@@ -1,41 +1,52 @@
 package com.outofcity.server.dto.activity.response;
 
-import com.outofcity.server.domain.Review;
+import lombok.Builder;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 public record ActivityDetailResponseDto(
-        Long id,
-        String activityName,
-        List<String> activityPhoto,
-        String description,
-        String state,
-        Integer price,
-        String mainCategory,
-        String address,
-        Double latitude,
-        Double longitude
-//        List<Review> reviews,
-) {
-    public record Review(
             Long id,
-            Writer writer,
-            Integer reviewLocation,
-            Integer reviewService,
-            Integer reviewInterest,
-            Integer reviewPrice,
-            Double reviewTotalStar,
-            String reviewContent,
-            Long reviewLikeCount,
-            LocalDateTime createdAt
+            String name,
+            List<String> activityPhotos,
+            String description,
+            String state,
+            int price,
+            String mainCategory,
+            List<String> subCategory,
+            int reviewCount,
+            int locationAverage,
+            int serviveAverage,
+            int interestAverage,
+            int priceAverage,
+            double ratingAverage,
+            String address,
+            double latitude,
+            double longitude,
+            List<AvailableDate> availableDates,
+            List<Review> reviews,
+            LocalDateTime createdAt,
+            LocalDateTime updatedAt
     ) {
-        public record Writer(
-                Long id,
-                String name
+        public record AvailableDate(
+                LocalDate date,
+                List<AvailableTime> times
         ) {
+            public record AvailableTime(
+                    LocalTime time,
+                    int remainParticipants,
+                    int maxParticipants
+            ) {}
         }
-    }
 
+        public record Review(
+                Long reviewId,
+                String reviewerName,
+                double rating,
+                String comment,
+                Long likes,
+                LocalDateTime createdAt
+        ) {}
 }

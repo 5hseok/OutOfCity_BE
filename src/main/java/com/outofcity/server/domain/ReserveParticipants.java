@@ -24,6 +24,9 @@ public class ReserveParticipants {
     @Column(nullable = false)
     private Integer maxParticipants;
 
+    @Column(nullable = false)
+    private Integer remainParticipants;
+
     @Builder
     public ReserveParticipants(ReserveTime reserveTime, Integer maxParticipants) {
         this.reserveTime = reserveTime;
