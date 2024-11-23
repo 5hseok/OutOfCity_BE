@@ -1,5 +1,6 @@
 package com.outofcity.server.controller.challenge;
 
+import com.outofcity.server.dto.challenge.request.ChallengeRegisterImageRequestDto;
 import com.outofcity.server.dto.challenge.response.ChallengeTodayResponseDto;
 import com.outofcity.server.dto.challenge.response.ChallengeUserHistoryResponseDto;
 import com.outofcity.server.global.exception.dto.SuccessStatusResponse;
@@ -33,9 +34,9 @@ public class ChallengeController {
     }
 
     // 챌린지 사진 등록
-    @PatchMapping("/proof/{imageUrl}")
-    public ResponseEntity<SuccessStatusResponse<Void>> proofChallenge(@RequestHeader("Authorization") String token, @PathVariable String imageUrl) {
-        challengeService.proofChallenge(token, imageUrl);
+    @PatchMapping("/proof")
+    public ResponseEntity<SuccessStatusResponse<Void>> proofChallenge(@RequestHeader("Authorization") String token, @RequestBody ChallengeRegisterImageRequestDto requestDto) {
+        challengeService.proofChallenge(token, requestDto);
         return ResponseEntity.ok(SuccessStatusResponse.of(SuccessMessage.CHALLENGE_PROOF_SUCCESS));
     }
 
