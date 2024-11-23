@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -32,6 +33,7 @@ public class ActivityReserveService {
 
 
     public ActivityReserveResponseDto createReservation(String token, ActivityReserveRequestDto activityReserveRequestDto) {
+
         // 토큰으로 일반회원 조회
         Long generalMemberId = jwtTokenProvider.getUserFromJwt(token);
         GeneralMember generalMember = generalMemberRepository.findById(generalMemberId)
@@ -40,74 +42,71 @@ public class ActivityReserveService {
         Activity activity = activityRepository.findById(activityReserveRequestDto.activityId())
                 .orElseThrow(() -> new BusinessException(ErrorMessage.ACTIVITY_NOT_FOUND));
 
+        // 예약 가능한 날짜 조회
         List<ReserveDate> reserveDates = reserveDateRepository.findAllByActivity(activity);
 
-        // 예약 가능한 날짜가 있는지 확인
+        // 예약 가능한 날짜인지 확인
         ReserveDate selectedReserveDate = reserveDates.stream()
-                .filter(date -> date.getReserveDate().equals(activityReserveRequestDto.reserveDate().toLocalDate()))
+                .filter(date -> date.getReserveDate().equals(activityReserveRequestDto.reserveDate()))
                 .findFirst()
                 .orElseThrow(() -> new BusinessException(ErrorMessage.INVALID_RESERVE_DATE));
 
-        List<ReserveTime> reserveTimes = reserveTimeRepository.findAllByReserveDate(selectedReserveDate);
+        log.info("selectedReserveDate: {}", selectedReserveDate);
+
+        // 예약 가능한 시간 조회
+        List<ReserveTime> reserveTimes = reserveDates.stream()
+                .flatMap(reserveDate -> reserveTimeRepository.findAllByReserveDate(reserveDate).stream())
+                .toList();
         log.info("reserveTimes: {}", reserveTimes);
         // 예약 가능한 시간인지 확인
         ReserveTime selectedReserveTime = reserveTimes.stream()
-                .filter(time -> time.getReserveTime().equals(activityReserveRequestDto.reserveTime().toLocalTime()))
+                .filter(time -> time.getReserveTime().equals(activityReserveRequestDto.reserveTime()))
                 .findFirst()
                 .orElseThrow(() -> new BusinessException(ErrorMessage.INVALID_RESERVE_TIME));
 
-        ReserveParticipants reservedParticipants = reserveParticipantsRepository.findByReserveTime(selectedReserveTime)
-                .orElseThrow(() -> new BusinessException(ErrorMessage.INVALID_PARTICIPANTS));
+        // 예약 가능한 인원 조회
+        List<ReserveParticipants> reserveParticipantsList = reserveTimes.stream()
+                .flatMap(reserveTime -> reserveParticipantsRepository.findByReserveTime(reserveTime).stream())
+                .toList();
 
-        Long activityIdVar = activity.getActivityId();
+        int requestedParticipants = activityReserveRequestDto.reserveParticipants(); // DTO에서 요청된 인원수 가져오기
+        // 해당 예약 시간의 예약 가능한 인원을 가져오기
+        ReserveParticipants reserveParticipants = reserveParticipantsList.stream()
+                .findFirst() // 일반적으로 하나의 ReserveTime에 하나의 ReserveParticipants가 있다고 가정합니다.
+                .orElseThrow(() -> new BusinessException(ErrorMessage.INVALID_RESERVE_PARTICIPANTS));
 
-        String state = "reserved";
-
-        Integer price = activity.getPrice();
-
-//        LocalDate reservedDateVar = selectedReserveDate.getReserveDate();
-//
-//        Time reservedTimeVar = selectedReserveTime.getReserveTime();
-
-        // 예약자 인원
-        Integer MaxreserveParticipantsVar = reservedParticipants.getMaxParticipants();
-
-        Integer remainParticipantsVar = MaxreserveParticipantsVar - activityReserveRequestDto.reserveParticipants();
-
-        // 예약 가능한 인원이 충분한지 확인
-        if (activityReserveRequestDto.reserveParticipants() > remainParticipantsVar) {
-            throw new BusinessException(ErrorMessage.INVALID_PARTICIPANTS);
+        // 남은 예약 가능한 인원이 요청된 인원 수보다 크거나 같은지 확인
+        if (reserveParticipants.getRemainParticipants() >= requestedParticipants) {
+            // 남은 인원에서 요청된 인원만큼 감소시키기
+            reserveParticipants.updateRemainParticipants(reserveParticipants.getRemainParticipants() - requestedParticipants);
+            reserveParticipantsRepository.save(reserveParticipants);
         }
 
-        // 예약 엔티티 생성 및 저장
-        Reserve reserve = Reserve.of(
-                activity,
-                generalMember,
-                selectedReserveTime,
-                selectedReserveDate,
-                LocalDateTime.now(),
-                activityReserveRequestDto.reserveParticipants(),
-                "reserved"
-        );
+        //예약 생성
+        Reserve reserve = Reserve.builder()
+                .generalMember(generalMember)
+                .activity(activity)
+                .reserveState("reserved")
+                .reserveDate(selectedReserveDate)
+                .reserveTime(selectedReserveTime)
+                .reservedParticipants(requestedParticipants)
+                .reserveDate(selectedReserveDate)
+                .reservedAt(LocalDateTime.now())
+                .reserveTime(selectedReserveTime)
+                .reservedParticipants(requestedParticipants)
+                .build();
 
-        try {
-            reserveRepository.save(reserve);
-        } catch (Exception e) {
-            log.error("Reserve 저장 중 오류 발생: {}", e.getMessage(), e);
-            throw new BusinessException(ErrorMessage.DATABASE_ERROR);
-        }
+        reserveRepository.save(reserve);
 
-        // 예약 정보 반환
         return ActivityReserveResponseDto.of(
-                generalMemberId,
+                reserve.getGeneralMember().getGeneralMemberId(),
                 reserve.getReserveId(),
-                activity.getActivityId(),
-                selectedReserveDate.getReserveDate().atStartOfDay(),
-                selectedReserveTime.getReserveTime().atDate(selectedReserveDate.getReserveDate()),
-                activity.getPrice(),
-                activityReserveRequestDto.reserveParticipants(),
-                remainParticipantsVar,
-                "reserved",
+                reserve.getActivity().getActivityId(),
+                reserve.getReserveDate().getReserveDate(),
+                reserve.getReserveTime().getReserveTime(),
+                reserve.getReservedParticipants(),
+                reserveParticipants.getRemainParticipants(),
+                reserve.getReserveState(),
                 reserve.getReservedAt()
         );
     }

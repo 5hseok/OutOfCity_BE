@@ -1,14 +1,15 @@
 package com.outofcity.server.dto.activity.response;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public record ActivityReserveResponseDto(
         Long userId,
         Long reservationId,
         Long activityId,
-        LocalDateTime date,
-        LocalDateTime time,
-        Integer price,
+        LocalDate date,
+        LocalTime time,
         Integer participants,
         Integer remainingParticipants,
         String reserveState,
@@ -18,9 +19,8 @@ public record ActivityReserveResponseDto(
             Long userId,
             Long reservationId,
             Long activityId,
-            LocalDateTime date,
-            LocalDateTime time,
-            Integer price,
+            LocalDate date,
+            LocalTime time,
             Integer participants,
             Integer remainingParticipants,
             String reserveState,
@@ -32,7 +32,6 @@ public record ActivityReserveResponseDto(
                 activityId,
                 date,
                 time,
-                price,
                 participants,
                 remainingParticipants,
                 reserveState,
