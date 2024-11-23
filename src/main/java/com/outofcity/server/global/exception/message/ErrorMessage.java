@@ -42,6 +42,9 @@ public enum ErrorMessage {
     EXPIRED_TOKEN(HttpStatus.BAD_REQUEST.value(), " 만료된 토큰입니다."),
     UNSUPPORTED_TOKEN(HttpStatus.BAD_REQUEST.value(), " 지원되지 않은 토큰입니다."),
     EMPTY_TOKEN(HttpStatus.BAD_REQUEST.value(), " 빈 토큰입니다.");
+    NOT_FOUND_CHALLENGE(HttpStatus.NO_CONTENT.value(), "챌린지를 찾을 수 없습니다."),
+    NOT_FOUND_USER_CHALLENGE(HttpStatus.NO_CONTENT.value(), "사용자의 챌린지를 찾을 수 없습니다."),
+    ALREADY_CERTIFIED(HttpStatus.CONTINUE.value(), "이미 인증된 챌린지입니다."),;
     private final int code;
     private final String message;
 }

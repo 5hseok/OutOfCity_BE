@@ -1,15 +1,12 @@
 package com.outofcity.server.domain;
 
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import jakarta.persistence.*;
 
-import java.sql.Time;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
+import java.time.LocalTime;
 
 @Entity
 @Getter
@@ -27,15 +24,15 @@ public class ReserveTime {
     private ReserveDate reserveDate;
 
     @Column(nullable = false)
-    private Time reserveTime;
+    private LocalTime reserveTime;
 
     @Builder
-    public ReserveTime(ReserveDate reserveDate, Time reserveTime) {
+    public ReserveTime(ReserveDate reserveDate, LocalTime reserveTime) {
         this.reserveDate = reserveDate;
         this.reserveTime = reserveTime;
     }
 
-    public static ReserveTime of(ReserveDate reserveDate, Time reserveTime) {
+    public static ReserveTime of(ReserveDate reserveDate, LocalTime reserveTime) {
         return ReserveTime.builder()
                 .reserveDate(reserveDate)
                 .reserveTime(reserveTime)
