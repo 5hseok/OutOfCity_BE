@@ -62,7 +62,7 @@ public class S3Service {
     public String uploadToS3(MultipartFile image, String token) {
 
         //jwt 토큰 검증
-        if (JwtValidationType.VALID_JWT.equals(jwtTokenProvider.validateToken(token))) {
+        if (!JwtValidationType.VALID_JWT.equals(jwtTokenProvider.validateToken(token))) {
             throw new BusinessException(ErrorMessage.JWT_UNAUTHORIZED_EXCEPTION);
         }
 
