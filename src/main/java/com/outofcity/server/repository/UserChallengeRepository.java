@@ -12,4 +12,6 @@ public interface UserChallengeRepository extends JpaRepository<UserChallenge, Lo
     List<UserChallenge> findAllByGeneralMember(GeneralMember generalMember);
 
     Optional<UserChallenge> findAllByPerformedAt(LocalDate createdAt);
+
+    Optional<UserChallenge> findByGeneralMemberAndPerformedAt(GeneralMember generalMember, LocalDate now);
 }

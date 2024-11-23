@@ -1,5 +1,6 @@
 package com.outofcity.server.controller.challenge;
 
+import com.outofcity.server.dto.challenge.request.ChallengeProofRequestDto;
 import com.outofcity.server.dto.challenge.response.ChallengeTodayResponseDto;
 import com.outofcity.server.dto.challenge.response.ChallengeUserHistoryResponseDto;
 import com.outofcity.server.global.exception.dto.SuccessStatusResponse;
@@ -8,10 +9,7 @@ import com.outofcity.server.service.challenge.ChallengeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -25,7 +23,6 @@ public class ChallengeController {
 
     // 오늘의 챌린지 조회
     @GetMapping("/today")
-
     public ResponseEntity<SuccessStatusResponse<ChallengeTodayResponseDto>> getTodayChallenge(@RequestHeader(value = "Authorization", required = false) String token) {
         return ResponseEntity.ok(SuccessStatusResponse.of(SuccessMessage.CHALLENGE_READ_SUCCESS, challengeService.getTodayChallenge(token)));
     }
@@ -34,6 +31,13 @@ public class ChallengeController {
     @GetMapping("")
     public ResponseEntity<SuccessStatusResponse<List<ChallengeUserHistoryResponseDto>>> getGeneralMemberChallenge(@RequestHeader("Authorization") String token) {
         return ResponseEntity.ok(SuccessStatusResponse.of(SuccessMessage.CHALLENGE__HISTORY_READ_SUCCESS, challengeService.getGeneralMemberChallengeHistory(token)));
+    }
+
+    // 챌린지 사진 등록
+    @PatchMapping("/proof/{imageUrl}")
+    public ResponseEntity<SuccessStatusResponse<Void>> proofChallenge(@RequestHeader("Authorization") String token, @PathVariable String imageUrl) {
+        challengeService.proofChallenge(token, imageUrl);
+        return ResponseEntity.ok(SuccessStatusResponse.of(SuccessMessage.CHALLENGE_PROOF_SUCCESS));
     }
 
 }

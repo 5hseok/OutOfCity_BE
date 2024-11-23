@@ -3,6 +3,7 @@ package com.outofcity.server.service.challenge;
 import com.outofcity.server.domain.Challenge;
 import com.outofcity.server.domain.GeneralMember;
 import com.outofcity.server.domain.UserChallenge;
+import com.outofcity.server.dto.challenge.request.ChallengeProofRequestDto;
 import com.outofcity.server.dto.challenge.response.ChallengeTodayResponseDto;
 import com.outofcity.server.dto.challenge.response.ChallengeUserHistoryResponseDto;
 import com.outofcity.server.global.exception.BusinessException;
@@ -149,10 +150,41 @@ public class ChallengeService {
                         .id(userChallenge.getUserChallengeId())
                         .image_url(userChallenge.getImageUrl())
                         .content(userChallenge.getChallenge().getContent())
-                        .createdAt(userChallenge.getChallenge().getCreatedAt().toString())
+                        .performedAt(userChallenge.getChallenge().getCreatedAt().toString())
                         .certification(userChallenge.getCertification())
                         .build()
                 )
                 .collect(Collectors.toList());
+    }
+
+    public ChallengeUserHistoryResponseDto proofChallenge(String token, String imageUrl) {
+
+        // Token 검증 및 일반회원 조회
+        GeneralMember generalMember = generalMemberRepository.findById(jwtTokenProvider.getUserFromJwt(token))
+                .orElseThrow(() -> new BusinessException(ErrorMessage.NOT_FOUND_USER));
+
+        // userChallenge 테이블에서 조회
+        UserChallenge userChallenge = userChallengeRepository.findByGeneralMemberAndPerformedAt(generalMember, LocalDate.now())
+                .orElseThrow(() -> new BusinessException(ErrorMessage.NOT_FOUND_USER_CHALLENGE));
+
+        // 이미 인증된 챌린지인 경우
+        if (userChallenge.getCertification().equals("certified")) {
+            throw new BusinessException(ErrorMessage.ALREADY_CERTIFIED);
+        }
+
+        // 인증된 챌린지로 변경
+        userChallenge.userUpdateUserChallenge(imageUrl);
+
+        // userChallenge 저장
+        userChallengeRepository.save(userChallenge);
+
+        return ChallengeUserHistoryResponseDto.builder()
+                .id(userChallenge.getUserChallengeId())
+                .image_url(userChallenge.getImageUrl())
+                .content(userChallenge.getChallenge().getContent())
+                .performedAt(userChallenge.getPerformedAt().toString())
+                .certification(userChallenge.getCertification())
+                .build()
+                ;
     }
 }
