@@ -1,6 +1,5 @@
 package com.outofcity.server.controller.challenge;
 
-import com.outofcity.server.dto.challenge.request.ChallengeProofRequestDto;
 import com.outofcity.server.dto.challenge.response.ChallengeTodayResponseDto;
 import com.outofcity.server.dto.challenge.response.ChallengeUserHistoryResponseDto;
 import com.outofcity.server.global.exception.dto.SuccessStatusResponse;
