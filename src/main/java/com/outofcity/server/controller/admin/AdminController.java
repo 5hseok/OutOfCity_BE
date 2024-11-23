@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("${admin.url}")
+@RequestMapping("/api/admin")
 public class AdminController {
 
     private final AdminActivityService adminActivityService;
