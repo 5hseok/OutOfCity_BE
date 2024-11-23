@@ -31,6 +31,7 @@ public class ReserveParticipants {
     public ReserveParticipants(ReserveTime reserveTime, Integer maxParticipants) {
         this.reserveTime = reserveTime;
         this.maxParticipants = maxParticipants;
+        this.remainParticipants = maxParticipants;
     }
 
     public static ReserveParticipants of(ReserveTime reserveTime, Integer maxParticipants) {
