@@ -14,15 +14,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
 @Slf4j
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class BusinessMemberController {
 
     private final BusinessMemberService businessMemberService;
 
-    @PostMapping("register/business")
+    @PostMapping("/register/business")
     public ResponseEntity<SuccessStatusResponse<BusinessMemberResponseDto>> registerBusiness(@RequestBody BusinessMemberRequestDto businessMemberRequestDto) {
         return ResponseEntity.status(HttpStatus.OK).body(
                 SuccessStatusResponse.of(

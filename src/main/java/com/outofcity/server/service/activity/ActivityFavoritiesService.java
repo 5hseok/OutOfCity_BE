@@ -42,8 +42,11 @@ public class ActivityFavoritiesService {
 
         GeneralMember generalMember = generalMemberRepository.findById(generalMemberId)
                 .orElseThrow(() -> new BusinessException(ErrorMessage.GENERAL_MEMBER_NOT_FOUND));
+
         // 일반회원의 액티비티 즐겨찾기 목록 조회
         List<ActivityFavorities> activityFavorities = activityFavoritiesRepository.findAllByGeneralMember(generalMember);
+
+        log.info("activityFavorities: {}", activityFavorities);
 
         // 각 즐겨찾기에서 액티비티 정보를 가져와 ActivityResponseDto로 변환
         return activityFavorities.stream()

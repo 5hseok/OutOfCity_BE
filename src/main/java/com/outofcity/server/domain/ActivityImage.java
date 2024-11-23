@@ -3,10 +3,12 @@ package com.outofcity.server.domain;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
 @Table(name = "activity_image")
+@NoArgsConstructor
 public class ActivityImage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
