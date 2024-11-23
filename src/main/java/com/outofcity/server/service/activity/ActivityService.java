@@ -2,6 +2,7 @@ package com.outofcity.server.service.activity;
 
 import com.outofcity.server.domain.*;
 import com.outofcity.server.dto.activity.request.ActivityTypeRequestDto;
+import com.outofcity.server.dto.activity.response.ActivityDetailResponseDto;
 import com.outofcity.server.dto.activity.response.ActivityResponseDto;
 import com.outofcity.server.global.exception.BusinessException;
 import com.outofcity.server.global.exception.message.ErrorMessage;
@@ -31,6 +32,13 @@ public class ActivityService {
     private final ReserveDateRepository reserveDateRepository;
     private final ActivityRepository activityRepository;
     private final ActivityImageRepository activityImageRepository;
+
+    //상세 조회
+    public void getActivity(Long activityId) {
+        Activity activity = activityRepository.findById(activityId)
+                .orElseThrow(() -> new BusinessException(ErrorMessage.ACTIVITY_NOT_FOUND));
+//        return convertToDetailDto(activity);
+    }
 
     public List<ActivityResponseDto> getTypePopularActivities(ActivityTypeRequestDto requestDto) {
 
@@ -125,5 +133,9 @@ public class ActivityService {
                 activity.getLatitude(),
                 activity.getLongitude()
         );
+    }
+
+    private void convertToDetailDto(Activity activity){
+
     }
 }

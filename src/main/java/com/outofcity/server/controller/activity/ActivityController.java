@@ -23,6 +23,15 @@ public class ActivityController {
     private final ActivityFavoritiesService activityFavoritiesService;
     private final ActivityService activityService;
 
+    //상세 조회
+    @GetMapping("/{activityId}")
+    public ResponseEntity<SuccessStatusResponse<Void>> getActivity(@PathVariable Long activityId) {
+        activityService.getActivity(activityId);
+        return ResponseEntity.ok(SuccessStatusResponse.of(
+                SuccessMessage.ACTIVITY_READ_SUCCESS
+        ));
+    }
+
     //타입에 맞는 인기 액티비티 조회
     @GetMapping("/types")
     public ResponseEntity<SuccessStatusResponse<List<ActivityResponseDto>>> getTypePopularActivities(
