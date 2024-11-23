@@ -3,7 +3,6 @@ package com.outofcity.server.service.challenge;
 import com.outofcity.server.domain.Challenge;
 import com.outofcity.server.domain.GeneralMember;
 import com.outofcity.server.domain.UserChallenge;
-import com.outofcity.server.dto.challenge.request.ChallengeProofRequestDto;
 import com.outofcity.server.dto.challenge.response.ChallengeTodayResponseDto;
 import com.outofcity.server.dto.challenge.response.ChallengeUserHistoryResponseDto;
 import com.outofcity.server.global.exception.BusinessException;

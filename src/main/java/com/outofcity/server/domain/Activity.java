@@ -28,9 +28,6 @@ public class Activity {
     private String name;
 
     @Column
-    private String activityPhoto;
-
-    @Column
     private String description;
 
     @Column
@@ -58,10 +55,9 @@ public class Activity {
     private Double longitude;
 
     @Builder
-    public Activity(BusinessMember businessMember, String name, String activityPhoto, String description, String state, Integer price, String mainCategory, LocalDateTime createdAt, LocalDateTime updatedAt, String address, Double latitude, Double longitude) {
+    public Activity(BusinessMember businessMember, String name, String description, String state, Integer price, String mainCategory, LocalDateTime createdAt, LocalDateTime updatedAt, String address, Double latitude, Double longitude) {
         this.businessMember = businessMember;
         this.name = name;
-        this.activityPhoto = activityPhoto;
         this.description = description;
         this.state = state;
         this.price = price;
@@ -73,11 +69,10 @@ public class Activity {
         this.longitude = longitude;
     }
 
-    public static Activity of(BusinessMember businessMember, String name, String activityPhoto, String description, String state, Integer price, String mainCategory, LocalDateTime createdAt, LocalDateTime updatedAt, String address, Double latitude, Double longitude) {
+    public static Activity of(BusinessMember businessMember, String name, String description, String state, Integer price, String mainCategory, LocalDateTime createdAt, LocalDateTime updatedAt, String address, Double latitude, Double longitude) {
         return Activity.builder()
                 .businessMember(businessMember)
                 .name(name)
-                .activityPhoto(activityPhoto)
                 .description(description)
                 .state(state)
                 .price(price)
@@ -90,9 +85,8 @@ public class Activity {
                 .build();
     }
 
-    public void AdminUpdateActivity(String name, String activityPhoto, String description, String state, Integer price, String mainCategory, String address, Double latitude, Double longitude) {
+    public void AdminUpdateActivity(String name, String description, String state, Integer price, String mainCategory, String address, Double latitude, Double longitude) {
         this.name = name;
-        this.activityPhoto = activityPhoto;
         this.description = description;
         this.state = state;
         this.price = price;

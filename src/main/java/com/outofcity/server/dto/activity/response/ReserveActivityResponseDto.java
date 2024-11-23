@@ -3,6 +3,7 @@ package com.outofcity.server.dto.activity.response;
 import lombok.Builder;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Builder
 public record ReserveActivityResponseDto(
@@ -11,9 +12,9 @@ public record ReserveActivityResponseDto(
         String orderName,
         LocalDateTime orderTime,
         Integer orderPerson,
-        String orderActivityPhoto
+        List<String> orderActivityPhoto
 ) {
-    public static ReserveActivityResponseDto of(Long id, String orderNumber, String orderName, LocalDateTime orderTime, Integer orderPerson, String orderActivityPhoto) {
+    public static ReserveActivityResponseDto of(Long id, String orderNumber, String orderName, LocalDateTime orderTime, Integer orderPerson, List<String> orderActivityPhoto) {
         return new ReserveActivityResponseDto(id, orderNumber, orderName, orderTime, orderPerson, orderActivityPhoto);
     }
 }
