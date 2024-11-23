@@ -32,12 +32,40 @@ public class ActivityService {
     private final ReserveDateRepository reserveDateRepository;
     private final ActivityRepository activityRepository;
     private final ActivityImageRepository activityImageRepository;
+    private final ReserveTimeRepository reserveTimeRepository;
+    private final ReserveParticipantsRepository reserveParticipantsRepository;
 
     //상세 조회
-    public void getActivity(Long activityId) {
+    public ActivityDetailResponseDto getActivity(String token, Long activityId) {
         Activity activity = activityRepository.findById(activityId)
                 .orElseThrow(() -> new BusinessException(ErrorMessage.ACTIVITY_NOT_FOUND));
-//        return convertToDetailDto(activity);
+
+        //액티비티 이미지 조회
+        List<ActivityImage> activityImages = activityImageRepository.findAllByActivity(activity);
+        log.info("activityImages: {}", activityImages);
+
+        //Review 조회
+        List<Review> reviews = reviewRepository.findAllByActivity(activity);
+        log.info("reviews: {}", reviews);
+
+        //서브 카테고리 조회
+        List<ActivityType> activityTypes = activityTypeRepository.findAllByActivity(activity);
+        log.info("activityTypes: {}", activityTypes);
+
+// 예약 가능 날짜 조회
+        List<ReserveDate> reserveDates = reserveDateRepository.findAllByActivity(activity);
+
+// 예약 가능 시간 조회
+        List<ReserveTime> reserveTimes = reserveDates.stream()
+                .flatMap(reserveDate -> reserveTimeRepository.findAllByReserveDate(reserveDate).stream())
+                .toList();
+
+// 예약 가능 인원 조회
+        List<ReserveParticipants> reserveParticipants = reserveTimes.stream()
+                .flatMap(reserveTime -> reserveParticipantsRepository.findByReserveTime(reserveTime).stream())
+                .toList();
+
+        return convertToDetailDto(activity, activityImages, reviews, activityTypes, reserveDates, reserveTimes, reserveParticipants);
     }
 
     public List<ActivityResponseDto> getTypePopularActivities(ActivityTypeRequestDto requestDto) {
@@ -66,7 +94,7 @@ public class ActivityService {
         return activityList.stream()
                 .filter(activity -> calculateAverageRating(activity) >= 4.5)
                 .sorted(Comparator.comparingInt(this::getReviewCount).reversed()
-                        .thenComparingInt(activity-> getReservationCount(activity, false)).reversed())
+                        .thenComparingInt(activity -> getReservationCount(activity, false)).reversed())
                 .limit(5)
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
@@ -81,8 +109,7 @@ public class ActivityService {
                     .sorted(Comparator.comparingInt((Activity activity) -> getReservationCount(activity, true)).reversed())
                     .map(this::convertToDto)
                     .collect(Collectors.toList());
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             log.error("인기 액티비티 조회 중 오류 발생", e);
             return null;
         }
@@ -135,7 +162,94 @@ public class ActivityService {
         );
     }
 
-    private void convertToDetailDto(Activity activity){
+    // 액티비티 상세 조회 DTO 변환
+    private ActivityDetailResponseDto convertToDetailDto(
+            Activity activity,
+            List<ActivityImage> activityImages,
+            List<Review> reviews,
+            List<ActivityType> activityTypes,
+            List<ReserveDate> reserveDates,
+            List<ReserveTime> reserveTimes,
+            List<ReserveParticipants> reserveParticipants
+    ) {
+        // 액티비티 이미지 URL 리스트 변환
+        List<String> activityPhotos = activityImages.stream()
+                .map(ActivityImage::getImageUrl)
+                .toList();
 
+        // 리뷰 리스트 변환
+        List<ActivityDetailResponseDto.Review> reviewList = reviews.stream()
+                .map(review -> new ActivityDetailResponseDto.Review(
+                        review.getReviewId(),
+                        review.getGeneralMember().getNickname(),
+                        review.getRating(),
+                        review.getContent(),
+                        review.getLikes(),
+                        review.getCreatedAt()
+                ))
+                .toList();
+
+        // 리뷰 평균 계산
+        double locationAverage = reviews.stream().mapToDouble(Review::getLocation).average().orElse(0.0);
+        double serviceAverage = reviews.stream().mapToDouble(Review::getService).average().orElse(0.0);
+        double interestAverage = reviews.stream().mapToDouble(Review::getInterest).average().orElse(0.0);
+        double priceAverage = reviews.stream().mapToDouble(Review::getPrice).average().orElse(0.0);
+        double ratingAverage = reviews.stream().mapToDouble(Review::getRating).average().orElse(0.0);
+
+        // 예약 가능 날짜 리스트 변환
+        List<ActivityDetailResponseDto.AvailableDate> availableDates = reserveDates.stream()
+                .map(reserveDate -> {
+                    List<ActivityDetailResponseDto.AvailableDate.AvailableTime> availableTimes = reserveTimes.stream()
+                            .filter(reserveTime -> reserveTime.getReserveDate().equals(reserveDate))
+                            .map(reserveTime -> {
+                                int remainParticipants = reserveParticipants.stream()
+                                        .filter(reserveParticipant -> reserveParticipant.getReserveTime().equals(reserveTime))
+                                        .mapToInt(ReserveParticipants::getRemainParticipants)
+                                        .sum();
+                                int maxParticipants = reserveParticipants.stream()
+                                        .filter(reserveParticipant -> reserveParticipant.getReserveTime().equals(reserveTime))
+                                        .mapToInt(ReserveParticipants::getMaxParticipants)
+                                        .sum();
+                                return new ActivityDetailResponseDto.AvailableDate.AvailableTime(
+                                        reserveTime.getReserveTime(),
+                                        remainParticipants,
+                                        maxParticipants
+                                );
+                            })
+                            .collect(Collectors.toList());
+
+                    return new ActivityDetailResponseDto.AvailableDate(
+                            reserveDate.getReserveDate(),
+                            availableTimes
+                    );
+                })
+                .toList();
+
+        return new ActivityDetailResponseDto(
+                activity.getActivityId(),
+                activity.getName(),
+                activityPhotos,
+                activity.getDescription(),
+                activity.getState(),
+                activity.getPrice(),
+                activity.getMainCategory(),
+                activityTypes.stream()
+                        .map(ActivityType::getType)
+                        .map(Type::getName)
+                        .collect(Collectors.toList()),
+                reviews.size(),
+                (int) locationAverage,
+                (int) serviceAverage,
+                (int) interestAverage,
+                (int) priceAverage,
+                ratingAverage,
+                activity.getAddress(),
+                activity.getLatitude(),
+                activity.getLongitude(),
+                availableDates,
+                reviewList,
+                activity.getCreatedAt(),
+                activity.getUpdatedAt()
+        );
     }
 }
