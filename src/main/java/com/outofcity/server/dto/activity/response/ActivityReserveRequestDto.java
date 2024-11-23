@@ -1,11 +1,12 @@
 package com.outofcity.server.dto.activity.response;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 public record ActivityReserveRequestDto(
         Long activityId,
-        LocalDateTime reserveDate,
-        LocalDateTime reserveTime,
+        LocalDate reserveDate,
+        LocalTime reserveTime,
         Integer reserveParticipants
 ) {
 }

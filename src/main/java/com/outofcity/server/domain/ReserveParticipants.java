@@ -40,5 +40,9 @@ public class ReserveParticipants {
                 .maxParticipants(maxParticipants)
                 .build();
     }
+
+    public void updateRemainParticipants(Integer remainParticipants) {
+        this.remainParticipants = remainParticipants;
+    }
 }
 

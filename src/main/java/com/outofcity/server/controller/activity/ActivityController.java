@@ -35,7 +35,7 @@ public class ActivityController {
     }
 
     //타입에 맞는 인기 액티비티 조회
-    @GetMapping("/types")
+    @PostMapping("/types")
     public ResponseEntity<SuccessStatusResponse<List<ActivityResponseDto>>> getTypePopularActivities(
             @RequestBody ActivityTypeRequestDto requestDto) {
 
