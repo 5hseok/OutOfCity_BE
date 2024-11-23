@@ -1,19 +1,13 @@
 package com.outofcity.server.service.activity;
 
-import com.outofcity.server.domain.Activity;
-import com.outofcity.server.domain.ActivityFavorities;
-import com.outofcity.server.domain.ActivityImage;
-import com.outofcity.server.domain.GeneralMember;
+import com.outofcity.server.domain.*;
 import com.outofcity.server.dto.activity.response.ActivityFavoritiesResponseDto;
 import com.outofcity.server.dto.activity.response.ActivityResponseDto;
 import com.outofcity.server.global.exception.BusinessException;
 import com.outofcity.server.global.exception.message.ErrorMessage;
 import com.outofcity.server.global.exception.message.SuccessMessage;
 import com.outofcity.server.global.jwt.JwtTokenProvider;
-import com.outofcity.server.repository.ActivityFavoritiesRepository;
-import com.outofcity.server.repository.ActivityImageRepository;
-import com.outofcity.server.repository.ActivityRepository;
-import com.outofcity.server.repository.GeneralMemberRepository;
+import com.outofcity.server.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +27,7 @@ public class ActivityFavoritiesService {
     private final JwtTokenProvider jwtTokenProvider;
     private final ActivityRepository activityRepository;
     private final ActivityImageRepository activityImageRepository;
+    private final ActivityTypeRepository activityTypeRepository;
 
 
     // 액티비티 즐겨찾기 목록 조회
@@ -110,6 +105,7 @@ public class ActivityFavoritiesService {
     private ActivityResponseDto convertToDto(Activity activity) {
 
         List<ActivityImage> activityImages = activityImageRepository.findAllByActivity(activity);
+        List<ActivityType> activityTypes = activityTypeRepository.findAllByActivity(activity);
         return ActivityResponseDto.of(
                 activity.getActivityId(),
                 activity.getName(),
@@ -120,6 +116,10 @@ public class ActivityFavoritiesService {
                 activity.getState(),
                 activity.getPrice(),
                 activity.getMainCategory(),
+                activityTypes.stream()
+                        .map(ActivityType::getType)
+                        .map(Type::getName)
+                        .collect(Collectors.toList()),
                 activity.getCreatedAt(),
                 activity.getUpdatedAt(),
                 activity.getAddress(),
