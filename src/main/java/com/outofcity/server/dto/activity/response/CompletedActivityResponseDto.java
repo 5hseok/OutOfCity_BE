@@ -6,7 +6,7 @@ public record CompletedActivityResponseDto(
         String orderName,
         String orderTime,
         Integer orderPerson,
-        String orderActivityPhoto,
+        List<String> orderActivityPhoto,
         Boolean reviewExist,
         List<Review> reviews // 리뷰를 리스트 형태로 수정
 ) {

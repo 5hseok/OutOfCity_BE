@@ -2,6 +2,7 @@ package com.outofcity.server.service.activity;
 
 import com.outofcity.server.domain.Activity;
 import com.outofcity.server.domain.ActivityFavorities;
+import com.outofcity.server.domain.ActivityImage;
 import com.outofcity.server.domain.GeneralMember;
 import com.outofcity.server.dto.activity.response.ActivityFavoritiesResponseDto;
 import com.outofcity.server.dto.activity.response.ActivityResponseDto;
@@ -10,6 +11,7 @@ import com.outofcity.server.global.exception.message.ErrorMessage;
 import com.outofcity.server.global.exception.message.SuccessMessage;
 import com.outofcity.server.global.jwt.JwtTokenProvider;
 import com.outofcity.server.repository.ActivityFavoritiesRepository;
+import com.outofcity.server.repository.ActivityImageRepository;
 import com.outofcity.server.repository.ActivityRepository;
 import com.outofcity.server.repository.GeneralMemberRepository;
 import jakarta.transaction.Transactional;
@@ -30,6 +32,7 @@ public class ActivityFavoritiesService {
     private final GeneralMemberRepository generalMemberRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final ActivityRepository activityRepository;
+    private final ActivityImageRepository activityImageRepository;
 
 
     // 액티비티 즐겨찾기 목록 조회
@@ -101,12 +104,15 @@ public class ActivityFavoritiesService {
         return SuccessMessage.ACTIVITY_LIKE_DELETE_SUCCESS;
     }
 
-
     private ActivityResponseDto convertToDto(Activity activity) {
+
+        List<ActivityImage> activityImages = activityImageRepository.findAllByActivity(activity);
         return ActivityResponseDto.of(
                 activity.getActivityId(),
                 activity.getName(),
-                activity.getActivityPhoto(),
+                activityImages.stream()
+                        .map(ActivityImage::getImageUrl)
+                        .collect(Collectors.toList()),
                 activity.getDescription(),
                 activity.getState(),
                 activity.getPrice(),

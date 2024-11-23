@@ -1,5 +1,6 @@
 package com.outofcity.server.service.activity;
 
+import com.outofcity.server.domain.ActivityImage;
 import com.outofcity.server.domain.GeneralMember;
 import com.outofcity.server.domain.Reserve;
 import com.outofcity.server.domain.Review;
@@ -8,6 +9,7 @@ import com.outofcity.server.dto.activity.response.ReserveActivityResponseDto;
 import com.outofcity.server.global.exception.BusinessException;
 import com.outofcity.server.global.exception.message.ErrorMessage;
 import com.outofcity.server.global.jwt.JwtTokenProvider;
+import com.outofcity.server.repository.ActivityImageRepository;
 import com.outofcity.server.repository.GeneralMemberRepository;
 import com.outofcity.server.repository.ReserveRepository;
 import com.outofcity.server.repository.ReviewRepository;
@@ -30,6 +32,7 @@ public class ReserveActivityService {
     private final JwtTokenProvider jwtTokenProvider;
     private final GeneralMemberRepository generalMemberRepository;
     private final ReviewRepository reviewRepository;
+    private final ActivityImageRepository activityImageRepository;
 
     // 예약 목록 조회
     public List<ReserveActivityResponseDto> getReservations(String token) {
@@ -85,12 +88,14 @@ public class ReserveActivityService {
                 ))
                 .collect(Collectors.toList());
 
+        List<ActivityImage> activityImages = activityImageRepository.findAllByActivity(reserve.getActivity());
+
         // CompletedActivityResponseDto 생성 후 반환
         return new CompletedActivityResponseDto(
                 reserve.getActivity().getName(),
                 reserve.getReservedAt().toString(),  // 필요한 형식으로 변환
                 reserve.getReservedParticipants(),
-                reserve.getActivity().getActivityPhoto(),
+                activityImages.stream().map(ActivityImage::getImageUrl).collect(Collectors.toList()),
                 !reviewDtos.isEmpty(),
                 reviewDtos
         );
@@ -112,13 +117,15 @@ public class ReserveActivityService {
     }
 
     private ReserveActivityResponseDto convertToDto(Reserve reserve, String reserveNumber) {
+        List<ActivityImage> activityImages = activityImageRepository.findAllByActivity(reserve.getActivity());
+
         return ReserveActivityResponseDto.of(
                 reserve.getReserveId(),
                 reserveNumber, // 주문번호
                 reserve.getActivity().getName(),
                 reserve.getReservedAt(),
                 reserve.getReservedParticipants(),
-                reserve.getActivity().getActivityPhoto()
+                activityImages.stream().map(ActivityImage::getImageUrl).collect(Collectors.toList())
         );
     }
 }
