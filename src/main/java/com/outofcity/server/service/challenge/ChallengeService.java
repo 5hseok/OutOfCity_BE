@@ -46,7 +46,7 @@ public class ChallengeService {
         if (todayChallenge.isPresent()) {
 
             // userChallenge 테이블에 todayChallenge에 해당하는 날짜를 가진 챌린지가 있는지 확인
-            Optional<UserChallenge> existingUserChallenge = userChallengeRepository.findByGeneralMemberAndPerformedAt(
+            Optional<UserChallenge> existingUserChallenge = userChallengeRepository.findAllByGeneralMemberAndPerformedAt(
                     generalMember,
                     todayChallenge.get().getCreatedAt()
             );
@@ -128,7 +128,7 @@ public class ChallengeService {
                 .orElseThrow(() -> new BusinessException(ErrorMessage.NOT_FOUND_USER));
 
         // 일반회원의 챌린지 목록 조회
-        List<UserChallenge> userChallengeHistory = userChallengeRepository.findByGeneralMember(generalMember);
+        List<UserChallenge> userChallengeHistory = userChallengeRepository.findAllByGeneralMember(generalMember);
 
         // 챌린지 정보를 DTO로 변환하여 반환
         return userChallengeHistory.stream()
