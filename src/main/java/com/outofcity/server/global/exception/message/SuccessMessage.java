@@ -24,7 +24,10 @@ public enum SuccessMessage {
     CHALLENGE_READ_SUCCESS(HttpStatus.OK.value(), "오늘의 챌린지 조회에 성공하였습니다."),
     CHALLENGE__HISTORY_READ_SUCCESS(HttpStatus.OK.value(), "사용자의 지금까지 챌린지 현황 조회에 성공하였습니다."),
     NICKNAME_CHANGE_SUCCESS(HttpStatus.OK.value(), "닉네임 변경에 성공하였습니다."),
+    RESERVE_ACTIVITY_RESERVE_SUCCESS(HttpStatus.OK.value(), "액티비티 예약에 성공하였습니다."),
+    RESERVE_ACTIVITY_DELETE_SUCCESS(HttpStatus.OK.value(), "예약 삭제에 성공하였습니다."),;;
     ACTIVITY_TYPE_READ_SUCCESS(HttpStatus.OK.value(), "타입에 맞는 인기 액티비티 조회에 성공하였습니다."),;
+
     private final int code;
     private final String message;
 }

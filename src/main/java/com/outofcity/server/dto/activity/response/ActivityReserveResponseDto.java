@@ -3,13 +3,40 @@ package com.outofcity.server.dto.activity.response;
 import java.time.LocalDateTime;
 
 public record ActivityReserveResponseDto(
-        Long id,
-        LocalDateTime reservedDate,
-        LocalDateTime reservedTime,
-        Integer remainParticipants
-
+        Long userId,
+        Long reservationId,
+        Long activityId,
+        LocalDateTime date,
+        LocalDateTime time,
+        Integer price,
+        Integer participants,
+        Integer remainingParticipants,
+        String reserveState,
+        LocalDateTime createdAt
 ) {
-    public static ActivityReserveResponseDto of(Long id, Long activityId, String state, Integer price, LocalDateTime reservedDate, LocalDateTime reservedTime, Integer remainParticipants, Integer reservedParticipants) {
-        return new ActivityReserveResponseDto(id, reservedDate, reservedTime, remainParticipants);
+    public static ActivityReserveResponseDto of(
+            Long userId,
+            Long reservationId,
+            Long activityId,
+            LocalDateTime date,
+            LocalDateTime time,
+            Integer price,
+            Integer participants,
+            Integer remainingParticipants,
+            String reserveState,
+            LocalDateTime createdAt
+    ) {
+        return new ActivityReserveResponseDto(
+                userId,
+                reservationId,
+                activityId,
+                date,
+                time,
+                price,
+                participants,
+                remainingParticipants,
+                reserveState,
+                createdAt
+        );
     }
 }
