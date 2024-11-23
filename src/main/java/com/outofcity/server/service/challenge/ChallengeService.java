@@ -3,6 +3,7 @@ package com.outofcity.server.service.challenge;
 import com.outofcity.server.domain.Challenge;
 import com.outofcity.server.domain.GeneralMember;
 import com.outofcity.server.domain.UserChallenge;
+import com.outofcity.server.dto.challenge.request.ChallengeRegisterImageRequestDto;
 import com.outofcity.server.dto.challenge.response.ChallengeTodayResponseDto;
 import com.outofcity.server.dto.challenge.response.ChallengeUserHistoryResponseDto;
 import com.outofcity.server.global.exception.BusinessException;
@@ -33,14 +34,15 @@ public class ChallengeService {
     private final GeneralMemberRepository generalMemberRepository;
     private final UserChallengeRepository userChallengeRepository;
 
+    //오늘 챌린지 조회
     public ChallengeTodayResponseDto getTodayChallenge(String token) {
 
+        //로그인 되지 않은 사용자라면 오늘 날짜에 해당하는 챌린지 반환
         if(token == null){
 
             // 오늘 날짜에 해당하는 챌린지가 있다면 반환
             LocalDate today = LocalDate.now();
             Optional<Challenge> todayChallenge = challengeRepository.findByCreatedAt(today);
-
 
             return new ChallengeTodayResponseDto(
                     todayChallenge.get().getChallengeId(),
@@ -49,6 +51,7 @@ public class ChallengeService {
             );
         }
 
+        // 로그인 된 사용자 코드
         // Token 검증 및 일반회원 조회
         GeneralMember generalMember = generalMemberRepository.findById(jwtTokenProvider.getUserFromJwt(token))
                 .orElseThrow(() -> new BusinessException(ErrorMessage.NOT_FOUND_USER));
@@ -58,33 +61,40 @@ public class ChallengeService {
         Optional<Challenge> todayChallenge = challengeRepository.findByCreatedAt(today);
 
         if (todayChallenge.isPresent()) {
-
             // userChallenge 테이블에 todayChallenge에 해당하는 날짜를 가진 챌린지가 있는지 확인
-            Optional<UserChallenge> existingUserChallenge = userChallengeRepository.findAllByPerformedAt(
-                    todayChallenge.get().getCreatedAt()
-            );
-
-            if (existingUserChallenge.isEmpty()) {
-
-                //userChallenge에 챌린지 추가
-                UserChallenge userChallenge = UserChallenge.of(
+            try {
+                Optional<UserChallenge> existingUserChallenge = userChallengeRepository.findByGeneralMemberAndPerformedAt(
                         generalMember,
-                        todayChallenge.get(),
-                        null,
-                        "uncertified",
                         todayChallenge.get().getCreatedAt()
                 );
 
-                // userChallenge 저장
-                userChallengeRepository.save(userChallenge);
-            }
+                log.info("existingUserChallenge : {}", existingUserChallenge);
 
-            //userChallenge 반환
-            return new ChallengeTodayResponseDto(
-                    todayChallenge.get().getChallengeId(),
-                    todayChallenge.get().getContent(),
-                    todayChallenge.get().getCreatedAt()
-            );
+                if (existingUserChallenge.isEmpty()) {
+
+                    //userChallenge에 챌린지 추가
+                    UserChallenge userChallenge = UserChallenge.of(
+                            generalMember,
+                            todayChallenge.get(),
+                            null,
+                            "uncertified",
+                            todayChallenge.get().getCreatedAt()
+                    );
+
+                    // userChallenge 저장
+                    userChallengeRepository.save(userChallenge);
+                }
+
+                //userChallenge 반환
+                return new ChallengeTodayResponseDto(
+                        todayChallenge.get().getChallengeId(),
+                        todayChallenge.get().getContent(),
+                        todayChallenge.get().getCreatedAt()
+                );
+            }
+            catch (Exception e) {
+                throw new BusinessException(ErrorMessage.NOT_FOUND_USER_CHALLENGE);
+            }
         }
 
         // 오늘 날짜에 해당하는 챌린지가 없다면 새로운 챌린지 생성
@@ -156,7 +166,7 @@ public class ChallengeService {
                 .collect(Collectors.toList());
     }
 
-    public ChallengeUserHistoryResponseDto proofChallenge(String token, String imageUrl) {
+    public void proofChallenge(String token, ChallengeRegisterImageRequestDto requestDto) {
 
         // Token 검증 및 일반회원 조회
         GeneralMember generalMember = generalMemberRepository.findById(jwtTokenProvider.getUserFromJwt(token))
@@ -171,19 +181,10 @@ public class ChallengeService {
             throw new BusinessException(ErrorMessage.ALREADY_CERTIFIED);
         }
 
-        // 인증된 챌린지로 변경
-        userChallenge.userUpdateUserChallenge(imageUrl);
+        // 인증 중으로 변경
+        userChallenge.userUpdateUserChallenge(requestDto.imageUrl());
 
         // userChallenge 저장
         userChallengeRepository.save(userChallenge);
-
-        return ChallengeUserHistoryResponseDto.builder()
-                .id(userChallenge.getUserChallengeId())
-                .image_url(userChallenge.getImageUrl())
-                .content(userChallenge.getChallenge().getContent())
-                .performedAt(userChallenge.getPerformedAt().toString())
-                .certification(userChallenge.getCertification())
-                .build()
-                ;
     }
 }

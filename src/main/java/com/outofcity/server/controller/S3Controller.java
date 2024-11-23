@@ -1,5 +1,7 @@
 package com.outofcity.server.controller;
 
+import com.outofcity.server.global.exception.dto.SuccessStatusResponse;
+import com.outofcity.server.global.exception.message.SuccessMessage;
 import com.outofcity.server.service.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

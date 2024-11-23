@@ -25,7 +25,8 @@ public class BusinessMemberService {
 
     public BusinessMemberResponseDto registerBusiness(BusinessMemberRequestDto businessMemberRequestDto) {
 
-        BusinessMember existedBusinessMember = businessMemberRepository.findByBusinessNumber(businessMemberRequestDto.businessNumber());
+        BusinessMember existedBusinessMember = businessMemberRepository.findByBusinessNumber(businessMemberRequestDto.businessNumber())
+                .orElseThrow(() -> new BusinessException(ErrorMessage.NOT_FOUND_BUSINESS_MEMBER));
 
         if (existedBusinessMember != null) {
             log.info("이미 존재하는 사업자입니다. {}", businessMemberRequestDto.businessNumber());
