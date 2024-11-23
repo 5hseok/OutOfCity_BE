@@ -1,4 +1,4 @@
-name: Deploy Prochord
+name: Deploy OutOfCity
 on:
   push:
     branches:

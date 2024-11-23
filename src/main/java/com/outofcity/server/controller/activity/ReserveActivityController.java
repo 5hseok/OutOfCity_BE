@@ -5,7 +5,6 @@ import com.outofcity.server.dto.activity.response.ActivityReserveResponseDto;
 import com.outofcity.server.dto.activity.response.ReserveActivityResponseDto;
 import com.outofcity.server.global.exception.dto.SuccessStatusResponse;
 import com.outofcity.server.global.exception.message.SuccessMessage;
-//import com.outofcity.server.service.activity.ActivityReserveService;
 import com.outofcity.server.service.activity.ActivityReserveService;
 import com.outofcity.server.service.activity.ReserveActivityService;
 import lombok.RequiredArgsConstructor;
@@ -46,4 +45,5 @@ public class ReserveActivityController {
                 )
         );
     }
+
 }
