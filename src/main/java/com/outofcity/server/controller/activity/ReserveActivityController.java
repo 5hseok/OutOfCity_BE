@@ -39,7 +39,7 @@ public class ReserveActivityController {
     }
 
     @DeleteMapping("/reserve/{reserveId}")
-    public ResponseEntity<SuccessStatusResponse<SuccessMessage>> deleteFavorite(@RequestHeader ("Authorization") String token, @PathVariable Long reserveId) {
+    public ResponseEntity<SuccessStatusResponse<SuccessMessage>> deleteReservation(@RequestHeader ("Authorization") String token, @PathVariable Long reserveId) {
         return ResponseEntity.ok(SuccessStatusResponse.of(
                         SuccessMessage.RESERVE_ACTIVITY_DELETE_SUCCESS, activityReserveService.deleteReservation(token, reserveId)
                 )
