@@ -29,9 +29,19 @@ public enum ErrorMessage {
     INVALID_REVIEW(HttpStatus.FORBIDDEN.value(), "리뷰 평점이 잘못되었습니다."),
     NO_AVAILABLE_CHALLENGE(HttpStatus.SERVICE_UNAVAILABLE.value(), "이번 달에 사용 가능한 챌린지가 없습니다."),
     INVALID_PARTICIPANTS(HttpStatus.BAD_REQUEST.value(), "예약자 수설정이 잘못되었습니다."),
+    INVALID_RESERVE_PARTICIPANTS(HttpStatus.BAD_REQUEST.value(), "예약자가 남은 인원보다 많습니다."),
     INVALID_RESERVE_DATE(HttpStatus.BAD_REQUEST.value(), "예약 가능한 날짜가 아닙니다."),
     INVALID_RESERVE_TIME(HttpStatus.BAD_REQUEST.value(), "예약 가능한 시간이 아닙니다."),
-    INVALID_RESERVE(HttpStatus.NO_CONTENT.value(), "예약한 액티비티가 없습니다.");
+    INVALID_RESERVE(HttpStatus.NO_CONTENT.value(), "예약한 액티비티가 없습니다."),
+    CART_NOT_FOUND(HttpStatus.NO_CONTENT.value(), "장바구니가 없습니다."),
+    CART_NOT_BELONG_TO_MEMBER(HttpStatus.BAD_REQUEST.value(), "해당 사용자의 장바구니가 아닙니다."),
+    CART_ITEM_NOT_FOUND(HttpStatus.NO_CONTENT.value(), "장바구니에 액티비티가 없습니다."),
+    INVALID_DATA(HttpStatus.BAD_REQUEST.value(), " 데이터 무결성 오류 발생"),
+    INVALID_TOKEN(HttpStatus.BAD_REQUEST.value(), " 유효하지 않은 토큰입니다."),
+    INVALID_REQUEST(HttpStatus.BAD_REQUEST.value(), " 유효하지 않은 토큰입니다."),
+    EXPIRED_TOKEN(HttpStatus.BAD_REQUEST.value(), " 만료된 토큰입니다."),
+    UNSUPPORTED_TOKEN(HttpStatus.BAD_REQUEST.value(), " 지원되지 않은 토큰입니다."),
+    EMPTY_TOKEN(HttpStatus.BAD_REQUEST.value(), " 빈 토큰입니다.");
     private final int code;
     private final String message;
 }
