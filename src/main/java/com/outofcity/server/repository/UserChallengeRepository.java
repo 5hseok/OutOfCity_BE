@@ -11,5 +11,5 @@ import java.util.Optional;
 public interface UserChallengeRepository extends JpaRepository<UserChallenge, Long> {
     List<UserChallenge> findAllByGeneralMember(GeneralMember generalMember);
 
-    Optional<UserChallenge> findAllByGeneralMemberAndPerformedAt(GeneralMember generalMember, LocalDate performedAt);
+    Optional<UserChallenge> findAllByPerformedAt(LocalDate createdAt);
 }

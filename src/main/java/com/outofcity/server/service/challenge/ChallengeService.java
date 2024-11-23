@@ -35,6 +35,20 @@ public class ChallengeService {
 
     public ChallengeTodayResponseDto getTodayChallenge(String token) {
 
+        if(token == null){
+
+            // 오늘 날짜에 해당하는 챌린지가 있다면 반환
+            LocalDate today = LocalDate.now();
+            Optional<Challenge> todayChallenge = challengeRepository.findByCreatedAt(today);
+
+
+            return new ChallengeTodayResponseDto(
+                    todayChallenge.get().getChallengeId(),
+                    todayChallenge.get().getContent(),
+                    todayChallenge.get().getCreatedAt()
+            );
+        }
+
         // Token 검증 및 일반회원 조회
         GeneralMember generalMember = generalMemberRepository.findById(jwtTokenProvider.getUserFromJwt(token))
                 .orElseThrow(() -> new BusinessException(ErrorMessage.NOT_FOUND_USER));
@@ -46,8 +60,7 @@ public class ChallengeService {
         if (todayChallenge.isPresent()) {
 
             // userChallenge 테이블에 todayChallenge에 해당하는 날짜를 가진 챌린지가 있는지 확인
-            Optional<UserChallenge> existingUserChallenge = userChallengeRepository.findAllByGeneralMemberAndPerformedAt(
-                    generalMember,
+            Optional<UserChallenge> existingUserChallenge = userChallengeRepository.findAllByPerformedAt(
                     todayChallenge.get().getCreatedAt()
             );
 

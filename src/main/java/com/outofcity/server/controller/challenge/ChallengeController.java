@@ -20,11 +20,13 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/challenges")
 public class ChallengeController {
+
     private final ChallengeService challengeService;
 
     // 오늘의 챌린지 조회
     @GetMapping("/today")
-    public ResponseEntity<SuccessStatusResponse<ChallengeTodayResponseDto>> getTodayChallenge(@RequestHeader("Authorization") String token) {
+
+    public ResponseEntity<SuccessStatusResponse<ChallengeTodayResponseDto>> getTodayChallenge(@RequestHeader(value = "Authorization", required = false) String token) {
         return ResponseEntity.ok(SuccessStatusResponse.of(SuccessMessage.CHALLENGE_READ_SUCCESS, challengeService.getTodayChallenge(token)));
     }
 
