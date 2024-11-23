@@ -33,7 +33,8 @@ public enum SuccessMessage {
     ACTIVITY_POPULAR_READ_SUCCESS(HttpStatus.OK.value(), "인기 액티비티 조회에 성공하였습니다."),
     CHALLENGE_PROOF_SUCCESS(HttpStatus.OK.value(), "챌린지 사진 등록에 성공하였습니다."),
     ADMIN_CHALLENGE_PROOF_SUCCESS(HttpStatus.OK.value(), "관리자 챌린지 인증에 성공하였습니다."),
-    ADMIN_CHALLENGE_REGISTER_SUCCESS(HttpStatus.OK.value(), "관리자 챌린지 등록에 성공하였습니다."),;
+    ADMIN_CHALLENGE_REGISTER_SUCCESS(HttpStatus.OK.value(), "관리자 챌린지 등록에 성공하였습니다."),
+    ADMIN_ACTIVITY_REGISTER_SUCCESS(HttpStatus.OK.value(), "관리자 액티비티 등록에 성공하였습니다."),;
     private final int code;
     private final String message;
 }

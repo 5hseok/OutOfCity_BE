@@ -3,6 +3,8 @@ package com.outofcity.server.service.activity;
 import com.outofcity.server.domain.*;
 import com.outofcity.server.dto.activity.request.ActivityTypeRequestDto;
 import com.outofcity.server.dto.activity.response.ActivityResponseDto;
+import com.outofcity.server.global.exception.BusinessException;
+import com.outofcity.server.global.exception.message.ErrorMessage;
 import com.outofcity.server.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +35,8 @@ public class ActivityService {
     public List<ActivityResponseDto> getTypePopularActivities(ActivityTypeRequestDto requestDto) {
 
         //타입과 지역, 날짜에 맞는 액티비티 중 별점이 4.5이상 이고, 리뷰가 많고, 예약자수가 많은 순서대로 반환 (최대 5개)
-        Type getType = typeRepository.findByName(requestDto.type());
+        Type getType = typeRepository.findByName(requestDto.type())
+                .orElseThrow(() -> new BusinessException(ErrorMessage.TYPE_NOT_EXIST));
 
         //타입에 맞는 타입 액티비티 리스트 조회
         List<ActivityType> activityTypeList = activityTypeRepository.findAllByType(getType);
