@@ -5,7 +5,6 @@ import java.time.LocalTime;
 import java.util.List;
 
 public record ActivityRegisterRequestDto(
-        Long businessMemberId,
         Long businessMemberNumber,
         String name,
         String description,

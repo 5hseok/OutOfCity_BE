@@ -19,13 +19,12 @@ public class AdminController {
     private final AdminActivityService adminActivityService;
     private final AdminService adminAService;
 
-    //관리자 챌린지 등록
+    //관리자 액티비티 등록
     @PostMapping("/activities")
     public ResponseEntity<SuccessStatusResponse<Void>> registerActivity(@RequestHeader("Authorization") String token, @RequestBody ActivityRegisterRequestDto requestDto) {
         adminActivityService.registerActivity(token, requestDto);
         return ResponseEntity.ok(SuccessStatusResponse.of(SuccessMessage.ADMIN_CHALLENGE_REGISTER_SUCCESS));
     }
-
 
     //관리자 챌린지 인증
     @PatchMapping("/challenges/proof/{userChallengeId}")

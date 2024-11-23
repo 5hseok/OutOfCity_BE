@@ -57,10 +57,12 @@ public class UserChallenge {
     }
 
     public void userUpdateUserChallenge(String imageUrl) {
+        this.certification = "pending";
         this.imageUrl = imageUrl;
     }
 
     public void adminUpdateUserChallenge(String certification) {
         this.certification = certification;
+        this.certification = "certified";
     }
 }
