@@ -26,7 +26,7 @@ public class SecurityConfig {
             "/api/health",
             "/api/callback",
             "/api/register/business",
-            "/api/activities/recommend",
+            "/api/activities/recommend/{mainCategoryId}",
             "/api/activities/popular",
             "/api/login/kakao",
             "/api/challenges/today",

@@ -26,7 +26,9 @@ public class ActivityController {
 
     //상세 조회
     @GetMapping("/{activityId}")
-    public ResponseEntity<SuccessStatusResponse<ActivityDetailResponseDto>> getActivity(@RequestHeader ("Authorization") String token, @PathVariable Long activityId) {
+    public ResponseEntity<SuccessStatusResponse<ActivityDetailResponseDto>> getActivity(
+            @RequestHeader (value = "Authorization", required = false) String token,
+            @PathVariable Long activityId) {
         return ResponseEntity.ok(SuccessStatusResponse.of(
                 SuccessMessage.ACTIVITY_READ_SUCCESS,activityService.getActivity(token, activityId)
         ));
@@ -73,5 +75,12 @@ public class ActivityController {
                 SuccessMessage.ACTIVITY_LIKE_DELETE_SUCCESS, activityFavoritiesService.deleteFavorite(token, activityId)
                 )
         );
+    }
+
+    @GetMapping("/recommend/{mainCategoryId}")
+    public ResponseEntity<SuccessStatusResponse<List<ActivityResponseDto>>> getRecommendActivities(@RequestHeader ("Authorization") String token, @PathVariable int mainCategoryId) {
+        return ResponseEntity.ok(SuccessStatusResponse.of(
+                SuccessMessage.ACTIVITY_MAINCATEGORY_RECOMMEND_READ_SUCCESS, activityService.getRecommendActivities(token, mainCategoryId)
+        ));
     }
 }

@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.chrono.ChronoLocalDate;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -251,5 +253,22 @@ public class ActivityService {
                 activity.getCreatedAt(),
                 activity.getUpdatedAt()
         );
+    }
+
+    public List<ActivityResponseDto> getRecommendActivities(String token, int mainCategoryId) {
+
+        MainCategory mainCategory = Arrays.stream(MainCategory.values())
+                .filter(category -> category.getId() == mainCategoryId)
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Invalid main category ID: " + mainCategoryId));
+
+        // 해당 메인 카테고리에 맞는 액티비티 중 랜덤하게 5개 반환
+        List<Activity> activityList = activityRepository.findAllByMainCategory(mainCategory.getDescription());
+        Collections.shuffle(activityList);
+
+        return activityList.stream()
+                .limit(5)
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
     }
 }
