@@ -26,7 +26,13 @@ public enum SuccessMessage {
     NICKNAME_CHANGE_SUCCESS(HttpStatus.OK.value(), "닉네임 변경에 성공하였습니다."),
     RESERVE_ACTIVITY_RESERVE_SUCCESS(HttpStatus.OK.value(), "액티비티 예약에 성공하였습니다."),
     RESERVE_ACTIVITY_DELETE_SUCCESS(HttpStatus.OK.value(), "예약 삭제에 성공하였습니다."),
+    CART_ITEM_ADD_SUCCESS(HttpStatus.OK.value(), "장바구니 추가에 성공하였습니다."),
+    CART_ITEM_LIST_SUCCESS(HttpStatus.OK.value(), "장바구니 조회에 성공하였습니다."),
+    CART_DELETE_SUCCESS(HttpStatus.OK.value(), "장바구니 삭제에 성공하였습니다."),
+    CART_ITEM_DELETE_SUCCESS(HttpStatus.OK.value(), "장바구니 항목 삭제에 성공하였습니다."),
     ACTIVITY_TYPE_READ_SUCCESS(HttpStatus.OK.value(), "타입에 맞는 인기 액티비티 조회에 성공하였습니다."),;
+    ACTIVITY_POPULAR_READ_SUCCESS(HttpStatus.OK.value(), "인기 액티비티 조회에 성공하였습니다."),
+    CHALLENGE_PROOF_SUCCESS(HttpStatus.OK.value(), "챌린지 사진 등록에 성공하였습니다."),;
 
     private final int code;
     private final String message;

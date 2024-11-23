@@ -56,7 +56,7 @@ public class UserChallenge {
                 .build();
     }
 
-    public void userUpdateUserChallenge(String imageUrl, String certification) {
+    public void userUpdateUserChallenge(String imageUrl) {
         this.imageUrl = imageUrl;
     }
 

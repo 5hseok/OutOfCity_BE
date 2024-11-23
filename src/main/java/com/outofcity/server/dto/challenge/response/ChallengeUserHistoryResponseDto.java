@@ -7,7 +7,7 @@ public record ChallengeUserHistoryResponseDto(
         Long id,
         String image_url,
         String content,
-        String createdAt,
+        String performedAt,
         String certification
 ) {
 }

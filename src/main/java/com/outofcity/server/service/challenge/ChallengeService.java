@@ -3,6 +3,7 @@ package com.outofcity.server.service.challenge;
 import com.outofcity.server.domain.Challenge;
 import com.outofcity.server.domain.GeneralMember;
 import com.outofcity.server.domain.UserChallenge;
+import com.outofcity.server.dto.challenge.request.ChallengeProofRequestDto;
 import com.outofcity.server.dto.challenge.response.ChallengeTodayResponseDto;
 import com.outofcity.server.dto.challenge.response.ChallengeUserHistoryResponseDto;
 import com.outofcity.server.global.exception.BusinessException;
@@ -35,6 +36,20 @@ public class ChallengeService {
 
     public ChallengeTodayResponseDto getTodayChallenge(String token) {
 
+        if(token == null){
+
+            // 오늘 날짜에 해당하는 챌린지가 있다면 반환
+            LocalDate today = LocalDate.now();
+            Optional<Challenge> todayChallenge = challengeRepository.findByCreatedAt(today);
+
+
+            return new ChallengeTodayResponseDto(
+                    todayChallenge.get().getChallengeId(),
+                    todayChallenge.get().getContent(),
+                    todayChallenge.get().getCreatedAt()
+            );
+        }
+
         // Token 검증 및 일반회원 조회
         GeneralMember generalMember = generalMemberRepository.findById(jwtTokenProvider.getUserFromJwt(token))
                 .orElseThrow(() -> new BusinessException(ErrorMessage.NOT_FOUND_USER));
@@ -46,8 +61,7 @@ public class ChallengeService {
         if (todayChallenge.isPresent()) {
 
             // userChallenge 테이블에 todayChallenge에 해당하는 날짜를 가진 챌린지가 있는지 확인
-            Optional<UserChallenge> existingUserChallenge = userChallengeRepository.findAllByGeneralMemberAndPerformedAt(
-                    generalMember,
+            Optional<UserChallenge> existingUserChallenge = userChallengeRepository.findAllByPerformedAt(
                     todayChallenge.get().getCreatedAt()
             );
 
@@ -136,10 +150,41 @@ public class ChallengeService {
                         .id(userChallenge.getUserChallengeId())
                         .image_url(userChallenge.getImageUrl())
                         .content(userChallenge.getChallenge().getContent())
-                        .createdAt(userChallenge.getChallenge().getCreatedAt().toString())
+                        .performedAt(userChallenge.getChallenge().getCreatedAt().toString())
                         .certification(userChallenge.getCertification())
                         .build()
                 )
                 .collect(Collectors.toList());
+    }
+
+    public ChallengeUserHistoryResponseDto proofChallenge(String token, String imageUrl) {
+
+        // Token 검증 및 일반회원 조회
+        GeneralMember generalMember = generalMemberRepository.findById(jwtTokenProvider.getUserFromJwt(token))
+                .orElseThrow(() -> new BusinessException(ErrorMessage.NOT_FOUND_USER));
+
+        // userChallenge 테이블에서 조회
+        UserChallenge userChallenge = userChallengeRepository.findByGeneralMemberAndPerformedAt(generalMember, LocalDate.now())
+                .orElseThrow(() -> new BusinessException(ErrorMessage.NOT_FOUND_USER_CHALLENGE));
+
+        // 이미 인증된 챌린지인 경우
+        if (userChallenge.getCertification().equals("certified")) {
+            throw new BusinessException(ErrorMessage.ALREADY_CERTIFIED);
+        }
+
+        // 인증된 챌린지로 변경
+        userChallenge.userUpdateUserChallenge(imageUrl);
+
+        // userChallenge 저장
+        userChallengeRepository.save(userChallenge);
+
+        return ChallengeUserHistoryResponseDto.builder()
+                .id(userChallenge.getUserChallengeId())
+                .image_url(userChallenge.getImageUrl())
+                .content(userChallenge.getChallenge().getContent())
+                .performedAt(userChallenge.getPerformedAt().toString())
+                .certification(userChallenge.getCertification())
+                .build()
+                ;
     }
 }
