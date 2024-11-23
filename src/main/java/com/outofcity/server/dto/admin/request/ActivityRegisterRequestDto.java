@@ -25,7 +25,7 @@ public record ActivityRegisterRequestDto(
     ) {
         public record ReserveTime(
                 LocalTime time, // 예약 가능한 시간
-                int availableSlots // 해당 시간의 예약 가능한 인원
+                int availablePersonCount // 해당 시간의 예약 가능한 인원
         ) {
         }
     }
