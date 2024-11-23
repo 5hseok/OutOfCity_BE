@@ -1,6 +1,8 @@
 package com.outofcity.server.service;
 import com.outofcity.server.global.exception.BusinessException;
 import com.outofcity.server.global.exception.message.ErrorMessage;
+import com.outofcity.server.global.jwt.JwtTokenProvider;
+import com.outofcity.server.global.jwt.JwtValidationType;
 import com.outofcity.server.utils.MultiFileUtil;
 import com.outofcity.server.utils.MultipartFileResource;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +33,7 @@ public class S3Service {
 
     private final S3Client s3Client;
     private final S3Presigner s3Presigner;
+    private final JwtTokenProvider jwtTokenProvider;
 
     public String getPresignUrl(String filename) {
         if (filename == null || filename.isEmpty()) {
@@ -56,7 +59,13 @@ public class S3Service {
         return url;
     }
 
-    public String uploadToS3(MultipartFile image) {
+    public String uploadToS3(MultipartFile image, String token) {
+
+        //jwt 토큰 검증
+        if (JwtValidationType.VALID_JWT.equals(jwtTokenProvider.validateToken(token))) {
+            throw new BusinessException(ErrorMessage.JWT_UNAUTHORIZED_EXCEPTION);
+        }
+
         String contentType = MultiFileUtil.determineImageFormat(image);
         String mimeType;
         switch (contentType) {

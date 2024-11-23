@@ -1,9 +1,6 @@
 package com.outofcity.server.service.activity;
 
-import com.outofcity.server.domain.Activity;
-import com.outofcity.server.domain.ActivityType;
-import com.outofcity.server.domain.Review;
-import com.outofcity.server.domain.Type;
+import com.outofcity.server.domain.*;
 import com.outofcity.server.dto.activity.request.ActivityTypeRequestDto;
 import com.outofcity.server.dto.activity.response.ActivityResponseDto;
 import com.outofcity.server.repository.*;
@@ -12,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.chrono.ChronoLocalDate;
 import java.util.Comparator;
 import java.util.List;
@@ -28,6 +27,7 @@ public class ActivityService {
     private final ActivityTypeRepository activityTypeRepository;
     private final TypeRepository typeRepository;
     private final ReserveDateRepository reserveDateRepository;
+    private final ActivityRepository activityRepository;
 
     public List<ActivityResponseDto> getTypePopularActivities(ActivityTypeRequestDto requestDto) {
 
@@ -49,14 +49,31 @@ public class ActivityService {
                                 !reserve.getReserveDate().isAfter(ChronoLocalDate.from(requestDto.endDate()))))
                 .toList();
 
+
         //인기순
         return activityList.stream()
                 .filter(activity -> calculateAverageRating(activity) >= 4.5)
                 .sorted(Comparator.comparingInt(this::getReviewCount).reversed()
-                        .thenComparingInt(this::getReservationCount).reversed())
+                        .thenComparingInt(activity-> getReservationCount(activity, false)).reversed())
                 .limit(5)
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
+    }
+
+    public List<ActivityResponseDto> getPopularActivities() {
+        try {
+            List<Activity> activityList = activityRepository.findAll();
+            // 별점이 4.5 이상이고, 최근 일주일 내에 예약 수가 많은 순서대로 반환 (최대 5개)
+            return activityList.stream()
+                    .filter(activity -> calculateAverageRating(activity) >= 4.5)
+                    .sorted(Comparator.comparingInt((Activity activity) -> getReservationCount(activity, true)).reversed())
+                    .map(this::convertToDto)
+                    .collect(Collectors.toList());
+        }
+        catch (Exception e) {
+            log.error("인기 액티비티 조회 중 오류 발생", e);
+            return null;
+        }
     }
 
     // 별점 평균 계산
@@ -71,7 +88,17 @@ public class ActivityService {
     }
 
     // 예약 개수 반환 (추가로 해당 메서드에 맞게 Activity 클래스에서 적절한 참조 추가 필요)
-    private int getReservationCount(Activity activity) {
+    private int getReservationCount(Activity activity, Boolean flag) {
+        //flag가 true면 인기 액티비티 조회, false면 타입에 맞는 인기 액티비티 조회
+        //true는 최근 일주일 동안의 예약 수를 고려함.
+        if (flag) {
+            List<Reserve> reserveActivityList = reserveRepository.findAllByActivity(activity);
+            return reserveActivityList.stream()
+                    .filter(reserve -> reserve.getReserveDate().getReserveDate().isBefore(LocalDate.now().plusDays(1)))
+                    .filter(reserve -> reserve.getReserveTime().getReserveTime().isBefore(LocalTime.now()))
+                    .filter(reserve -> reserve.getReserveDate().getReserveDate().isAfter(LocalDate.now().minusDays(7)))
+                    .toList().size();
+        }
         return reserveRepository.findAllByActivity(activity).size();
     }
 

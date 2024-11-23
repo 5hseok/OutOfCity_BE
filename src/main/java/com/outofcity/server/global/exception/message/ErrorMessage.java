@@ -31,7 +31,10 @@ public enum ErrorMessage {
     INVALID_PARTICIPANTS(HttpStatus.BAD_REQUEST.value(), "예약자 수설정이 잘못되었습니다."),
     INVALID_RESERVE_DATE(HttpStatus.BAD_REQUEST.value(), "예약 가능한 날짜가 아닙니다."),
     INVALID_RESERVE_TIME(HttpStatus.BAD_REQUEST.value(), "예약 가능한 시간이 아닙니다."),
-    INVALID_RESERVE(HttpStatus.NO_CONTENT.value(), "예약한 액티비티가 없습니다.");
+    INVALID_RESERVE(HttpStatus.NO_CONTENT.value(), "예약한 액티비티가 없습니다."),
+    NOT_FOUND_CHALLENGE(HttpStatus.NO_CONTENT.value(), "챌린지를 찾을 수 없습니다."),
+    NOT_FOUND_USER_CHALLENGE(HttpStatus.NO_CONTENT.value(), "사용자의 챌린지를 찾을 수 없습니다."),
+    ALREADY_CERTIFIED(HttpStatus.CONTINUE.value(), "이미 인증된 챌린지입니다."),;
     private final int code;
     private final String message;
 }

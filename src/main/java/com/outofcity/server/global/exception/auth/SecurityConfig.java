@@ -26,10 +26,10 @@ public class SecurityConfig {
             "/api/health",
             "/api/callback",
             "/api/register/business",
-            "/api/s3",
             "/api/activities/recommend",
             "/api/activities/popular",
-            "/api/login/kakao"
+            "/api/login/kakao",
+            "/api/challenges/today",
     };
 
     @Bean
