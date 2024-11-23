@@ -145,6 +145,7 @@ public class ActivityService {
 
     private ActivityResponseDto convertToDto(Activity activity) {
         List<ActivityImage> activityImages = activityImageRepository.findAllByActivity(activity);
+        List<ActivityType> activityTypes = activityTypeRepository.findAllByActivity(activity);
 
         return ActivityResponseDto.of(
                 activity.getActivityId(),
@@ -156,6 +157,10 @@ public class ActivityService {
                 activity.getState(),
                 activity.getPrice(),
                 activity.getMainCategory(),
+                activityTypes.stream()
+                                .map(ActivityType::getType)
+                                .map(Type::getName)
+                                .collect(Collectors.toList()),
                 activity.getCreatedAt(),
                 activity.getUpdatedAt(),
                 activity.getAddress(),
