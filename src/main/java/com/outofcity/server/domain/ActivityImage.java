@@ -1,6 +1,7 @@
 package com.outofcity.server.domain;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @Table(name = "activity_image")
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ActivityImage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
